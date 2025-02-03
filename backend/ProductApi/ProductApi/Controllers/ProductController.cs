@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductApi.Application.ViewModel;
 using ProductApi.Model;
@@ -39,6 +40,39 @@ namespace ProductApi.Controllers
 
             _productRepository.Add(product);
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public IActionResult Search(int id)
+        {
+
+
+            var products = _productRepository.Get(id);
+            //var employeesDTOS = _mapper.Map<EmployeeDTO>(employees);
+
+
+            return Ok(products);
+        }
+
+        [HttpPost]
+        [Route("{id}/download")]
+        public IActionResult DownloadPhoto(int id)
+        {
+            var product = _productRepository.Get(id);
+
+            var dataBytes = System.IO.File.ReadAllBytes(product.imageurl);
+
+            var extensao = "image/" + product.imageurl.Split('.')[1];
+
+            return File(dataBytes, extensao);
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int id) 
+        {
+            _productRepository.Del(id);
+            return Ok("Produto Deletado com Sucesso!");
         }
     }
 }

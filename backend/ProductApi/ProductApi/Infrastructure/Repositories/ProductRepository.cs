@@ -13,6 +13,16 @@ namespace ProductApi.Infrastructure.Repositories
             _context.SaveChanges();
         }
 
+        public void Del(int id)
+        {
+            
+            var product = _context.Products.Where(d => d.productid == id).First();
+            _context.Products.Remove(product);
+            _context.SaveChanges();
+            System.IO.File.Delete(path: product.imageurl);
+
+        }
+
         public List<Product> Get()
         {
             return _context.Products.ToList();
