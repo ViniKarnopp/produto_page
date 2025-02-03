@@ -3,6 +3,8 @@ using ProductApi.Model;
 
 namespace ProductApi.Infrastructure
 {
+    /*A classe ConnectionContext é responsável por fazer a conexão ao banco de dados e
+     * manipular os dados do banco postgress usando a EntityFrameworkCore*/
     public class ConnectionContext : DbContext
     {
         public DbSet<Product> Products { get; set; }
