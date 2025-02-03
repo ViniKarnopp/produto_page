@@ -8,6 +8,7 @@ namespace ProductApi.Infrastructure.Repositories
 
         public void Add(Product product)
         {
+            product.SetProductId(_context.Products.Count() + 1);
             _context.Products.Add(product);
             _context.SaveChanges();
         }

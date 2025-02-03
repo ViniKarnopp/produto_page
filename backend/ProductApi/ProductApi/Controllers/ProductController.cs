@@ -10,12 +10,12 @@ namespace ProductApi.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
-        private readonly IMapper _mapper;
+        //private readonly IMapper _mapper;
 
-        public ProductController(IProductRepository productRepository, IMapper mapper)
+        public ProductController(IProductRepository productRepository)
         {
             _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            //_mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpGet]
@@ -35,7 +35,7 @@ namespace ProductApi.Controllers
             using Stream fileStream = new FileStream(filePath, FileMode.Create);
             productView.Photo.CopyTo(fileStream);
 
-            var product = new Product(productView.Descricao, productView.Preco, productView.Categoria,filePath);
+            var product = new Product(productView.Descricao, productView.Preco, productView.Categoria, filePath);
 
             _productRepository.Add(product);
             return Ok();
