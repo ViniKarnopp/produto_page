@@ -9,16 +9,12 @@ interface ProductProps {
   ImageUrl: string;
 }
 
-interface ResponseProps {
-  products: ProductProps[];
-}
 
 export default async function ListaProdutos() {
+
   const response = await axios.get("https://localhost:7048/api/product");
 
-  const data: ResponseProps = response.data;
-
-  console.log(data);
+  const data: ProductProps[] = response.data;
 
   return (
     <div>
@@ -26,12 +22,12 @@ export default async function ListaProdutos() {
             Produtos
         </h1>
         <div className="flex flex-col gap-4 mx-2">
-            {data.products.map(p => (
+            {data.map(p => (
                 <div key={p.ProductId} className="bg-gray-200 p-4 rounded-md">
-                    <h2 className="font-bold">{p.Nome}</h2>
-                    <p>{p.Descricao}</p>
-                    <p>{p.Preco}</p>
-                    <p>{p.Categoria}</p>
+                    <h2>Nome: {p.Nome}</h2>
+                    <p>Descrição: {p.Descricao}</p>
+                    <p>Preço: R$ {p.Preco}</p>
+                    <p>Categoria: {p.Categoria}</p>
                 </div>
             ))}
         </div>

@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ProductApi.Application.ViewModel;
 using ProductApi.Model;
 
@@ -34,7 +35,8 @@ namespace ProductApi.Controllers
             }
 
             var products = _productRepository.Get(precoMinimo, precoMaximo, categoria);
-            return Ok(products);
+            var response = System.Text.Json.JsonSerializer.Serialize(products);
+            return Ok(response);
         }
 
         [HttpPost]
@@ -93,7 +95,8 @@ namespace ProductApi.Controllers
 
 
             var products = _productRepository.Get(id);
-            return Ok(products);
+            var response = System.Text.Json.JsonSerializer.Serialize(products);
+            return Ok(response);
         }
 
         [HttpPost]
