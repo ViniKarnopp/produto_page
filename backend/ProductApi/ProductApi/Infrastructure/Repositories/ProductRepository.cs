@@ -23,26 +23,26 @@ namespace ProductApi.Infrastructure.Repositories
         public void Del(int id)
         {
             
-            var product = _context.Products.Where(d => d.productid == id).First();
+            var product = _context.Products.Where(d => d.ProductId == id).First();
             _context.Products.Remove(product);
             _context.SaveChanges();
-            System.IO.File.Delete(path: product.imageurl);
+            System.IO.File.Delete(path: product.ImageUrl);
 
         }
         //Atualiza produto conforme dados informados.
         public bool Update(Product product)
         {
-            var productAlt = _context.Products.Where(d => d.productid == product.productid).First();
+            var productAlt = _context.Products.Where(d => d.ProductId == product.ProductId).First();
             if (productAlt != null)
             {
-                productAlt.SetNome(product.nome);
-                productAlt.SetDescricao(product.descricao);
-                productAlt.SetPreco(product.preco);
-                productAlt.SetCategoria(product.categoria);
-                if(product.imageurl != "") 
+                productAlt.SetNome(product.Nome);
+                productAlt.SetDescricao(product.Descricao);
+                productAlt.SetPreco(product.Preco);
+                productAlt.SetCategoria(product.Categoria);
+                if(product.ImageUrl != "") 
                 {
-                    System.IO.File.Delete(path: productAlt.imageurl);
-                    productAlt.SetImageUrl(product.imageurl);
+                    System.IO.File.Delete(path: productAlt.ImageUrl);
+                    productAlt.SetImageUrl(product.ImageUrl);
 
                 }
                 _context.SaveChanges();
@@ -60,18 +60,18 @@ namespace ProductApi.Infrastructure.Repositories
             {
                 if (categoria != null)
                 {
-                    return _context.Products.Where(d => (d.preco >= precoMinimo || d.preco <= precoMaximo)).Where(d => d.categoria.Equals(categoria)).ToList();
+                    return _context.Products.Where(d => (d.Preco >= precoMinimo || d.Preco <= precoMaximo)).Where(d => d.Categoria.Equals(categoria)).ToList();
                 }
                 else
                 {
-                    return _context.Products.Where(d => (d.preco >= precoMinimo || d.preco <= precoMaximo)).ToList();
+                    return _context.Products.Where(d => (d.Preco >= precoMinimo || d.Preco <= precoMaximo)).ToList();
                 }
             }
             else 
             {
                 if (categoria != null) 
                 {
-                    return _context.Products.Where(d => d.categoria.Equals(categoria)).ToList();
+                    return _context.Products.Where(d => d.Categoria.Equals(categoria)).ToList();
                 }
                 else 
                 {

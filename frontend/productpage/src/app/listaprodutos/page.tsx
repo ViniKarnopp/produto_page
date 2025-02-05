@@ -1,32 +1,41 @@
-import axios from 'axios';
+import axios from "axios";
 
 interface ProductProps {
-    productid: number;
-    nome: string;
-    descricao: string;
-    preco: number;
-    categoria: string;
+  ProductId: number;
+  Nome: string;
+  Descricao: string;
+  Preco: number;
+  Categoria: string;
+  ImageUrl: string;
 }
 
 interface ResponseProps {
-    products: ProductProps[]
+  products: ProductProps[];
 }
 
-const url = 'https://localhost:7048/api/product'
-
-
 export default async function ListaProdutos() {
-    
+  const response = await axios.get("https://localhost:7048/api/product");
 
-    //const response = await axios.get(url)
-    const response = await fetch(url)
-    const data: ResponseProps = await response.json()
+  const data: ResponseProps = response.data;
 
-    console.log(data);
-    
-    return (
-        <div>
-            <h1>Página que Lista os Produtos</h1>
+  console.log(data);
+
+  return (
+    <div>
+        <h1 className="text-center mt-5 mb-2 font-bold text-3xl">
+            Produtos
+        </h1>
+        <div className="flex flex-col gap-4 mx-2">
+            {data.products.map(p => (
+                <div key={p.ProductId} className="bg-gray-200 p-4 rounded-md">
+                    <h2 className="font-bold">{p.Nome}</h2>
+                    <p>{p.Descricao}</p>
+                    <p>{p.Preco}</p>
+                    <p>{p.Categoria}</p>
+                </div>
+            ))}
         </div>
-    );
+        
+    </div>
+  );
 }

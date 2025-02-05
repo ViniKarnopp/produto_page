@@ -102,9 +102,9 @@ namespace ProductApi.Controllers
         {
             var product = _productRepository.Get(id);
 
-            var dataBytes = System.IO.File.ReadAllBytes(product.imageurl);
+            var dataBytes = System.IO.File.ReadAllBytes(product.ImageUrl);
 
-            var extensao = "image/" + product.imageurl.Split('.')[1];
+            var extensao = "image/" + product.ImageUrl.Split('.')[1];
 
             return File(dataBytes, extensao);
         }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProductApi.Model
@@ -9,44 +10,50 @@ namespace ProductApi.Model
     public class Product
     {
         [Key]
-        public int productid { get; private set; }
-        public string nome { get; private set; }
-        public string? descricao { get; private set; }
-        public double preco { get; private set; }
-        public string categoria { get; private set; }
-        public string? imageurl { get; private set; }
+        [Column("productid")]
+        public int ProductId { get; private set; }
+        [Column("nome")]
+        public string Nome { get; private set; }
+        [Column("descricao")]
+        public string? Descricao { get; private set; }
+        [Column("preco")]
+        public double Preco { get; private set; }
+        [Column("categoria")]
+        public string Categoria { get; private set; }
+        [Column("imageurl")]
+        public string? ImageUrl { get; private set; }
 
         public Product(string nome, string descricao, double preco, string categoria, string imageurl) {
-            this.nome = nome ?? throw new ArgumentNullException(nameof(nome));
-            this.descricao = descricao;
-            this.preco = preco;
-            this.categoria = categoria;
-            this.imageurl = imageurl;
+            this.Nome = nome ?? throw new ArgumentNullException(nameof(nome));
+            this.Descricao = descricao;
+            this.Preco = preco;
+            this.Categoria = categoria;
+            this.ImageUrl = imageurl;
         }
 
         public void SetProductId(int id) 
         {
-            this.productid = id;
+            this.ProductId = id;
         }
         public void SetNome(string nome)
         { 
-            this.nome = nome; 
+            this.Nome = nome; 
         }
         public void SetDescricao(string descricao)
         {
-            this.descricao = descricao;
+            this.Descricao = descricao;
         }
         public void SetPreco(double preco)
         {
-            this.preco = preco;
+            this.Preco = preco;
         }
         public void SetCategoria(string categoria)
         {
-            this.categoria = categoria;
+            this.Categoria = categoria;
         }
         public void SetImageUrl(string imageurl) 
         { 
-            this.imageurl = imageurl; 
+            this.ImageUrl = imageurl; 
         }
 
         public Product() 
