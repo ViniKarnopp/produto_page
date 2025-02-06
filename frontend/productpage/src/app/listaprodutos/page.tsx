@@ -1,6 +1,6 @@
 import axios from "axios";
 
-interface ProductProps {
+ export interface ProductProps {
   ProductId: number;
   Nome: string;
   Descricao: string;
@@ -26,7 +26,7 @@ export default async function ListaProdutos() {
                 <div key={p.ProductId} className="bg-gray-200 p-4 rounded-md">
                     <h2>Nome: {p.Nome}</h2>
                     <p>Descrição: {p.Descricao}</p>
-                    <p>Preço: R$ {p.Preco}</p>
+                    <p>Preço: R$ {parseFloat(p.Preco.toString()).toFixed(2)}</p>
                     <p>Categoria: {p.Categoria}</p>
                 </div>
             ))}
