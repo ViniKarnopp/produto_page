@@ -99,7 +99,7 @@ namespace ProductApi.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("{id}/download")]
         public IActionResult DownloadPhoto(int id)
         {

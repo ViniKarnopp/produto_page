@@ -1,4 +1,7 @@
-import axios from "axios";
+//import axios from "axios";
+//import {handler} from "../api/product/index";
+import { ListProducts } from "@/EndPoints/ListProducts";
+
 
  export interface ProductProps {
   ProductId: number;
@@ -12,9 +15,11 @@ import axios from "axios";
 
 export default async function ListaProdutos() {
 
-  const response = await axios.get("https://localhost:7048/api/product");
-
+  //const response = await axios.get("https://localhost:7048/api/product");
+  //const response = await handler;
+  const response = await ListProducts();
   const data: ProductProps[] = response.data;
+
 
   return (
     <div>
