@@ -1,13 +1,14 @@
 import { ProductProps } from "../page";
 import { DetailProduct } from "@/EndPoints/DetailProduct";
-import { ImageProduct } from "@/EndPoints/ImageProduct";
+//import { ImageProduct } from "@/EndPoints/ImageProduct";
 
-export default async function DetalheProduto({params} : {params : Promise<{Id : string}>}) {
-    const {Id} = await params;
+export default async function DetalheProduto({params} : {params : Promise<{id : string}>}) {
+    const {id} = await params;
 
-    const Detalhes : ProductProps = DetailProduct(Id);
-    const ImageData = ImageProduct(Id);
-    const ImageUrl = URL.createObjectURL(ImageData);
+    const response = await DetailProduct(id);
+    const Detalhes : ProductProps = response.data;
+    //const ImageData = ImageProduct(Id);
+    //const ImageUrl = URL.createObjectURL(ImageData);
   
 
   return (
@@ -19,7 +20,6 @@ export default async function DetalheProduto({params} : {params : Promise<{Id : 
             <p>Descrição: {Detalhes.Descricao}</p>
             <p>Preço: R$ {Detalhes.Preco.toFixed(2)}</p>
             <p>Categoria: {Detalhes.Categoria}</p>
-            <img src={ImageUrl} width='500' height='600'></img>
           </div>
         </div>
     </div>

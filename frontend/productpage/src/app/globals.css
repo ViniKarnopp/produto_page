@@ -19,3 +19,32 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.row {
+  clear: both;
+}
+
+.column-3 {    
+    width: 25%;    
+}
+
+.column-9 {    
+    width: 75%;    
+}
+
+.label {
+    padding-right: 3px;
+    text-align: right;    
+}
+
+.column {
+  float: left;
+  height: 41px;    
+}
+
+.input {
+  width: 60px;
+  height: 34px;    
+  padding-left: 5px;
+  box-sizing: border-box;
+}

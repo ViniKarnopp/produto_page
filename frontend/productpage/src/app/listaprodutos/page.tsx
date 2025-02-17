@@ -1,6 +1,7 @@
 //import axios from "axios";
 //import {handler} from "../api/product/index";
 import { ListProducts } from "@/EndPoints/ListProducts";
+import Link from "next/link";
 
 
  export interface ProductProps {
@@ -66,6 +67,7 @@ export default async function ListaProdutos() {
                     <p>Descrição: {p.Descricao}</p>
                     <p>Preço: R$ {parseFloat(p.Preco.toString()).toFixed(2)}</p>
                     <p>Categoria: {p.Categoria}</p>
+                    <Link href={'/listaprodutos/' + p.ProductId}>Detalhes do Produto</Link>
                 </div>
             ))}
         </div>
