@@ -19,8 +19,8 @@ export function Header() {
                         </Link>
                     </li>
                     <li>
-                        <Link href='/posts'>
-                             Posts
+                        <Link href='/cadastraproduto'>
+                             Novo Produto
                         </Link>
                     </li>
                 </ul>

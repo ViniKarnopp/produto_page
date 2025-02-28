@@ -1,11 +1,23 @@
-export default function CadastraProduto() {
+export default async function CadastraProduto() {
+
+  async function Salvar(DadosForm : FormData){
+    "use server";
+    //Atribuindo valores do input a váriaveis
+    const Nome = DadosForm.get("NomeProduto") as string;
+    console.log(Nome);
+    const Descricao = DadosForm.get("DescricaoProduto") as string;
+    console.log(Descricao);
+    const Foto = DadosForm.get("FotoProduto") as File;
+    console.log(Foto);
+  }
+
   return (
     <div>
       <h1 className="h1">Cadastro de Produtos</h1>
       <br />
       <br />
       <div className="flex justify-center">
-        <form className="flex-col text-left">
+        <form className="flex-col text-left" action={Salvar}>
           <div className="row">
             <div className="column-3 column label">
               <label htmlFor="NomeProduto">Nome: </label>
@@ -67,6 +79,14 @@ export default function CadastraProduto() {
                   <option value="Livros">Livros</option>
                   <option value="Outros">Outros</option>
                 </select>
+              </div>
+            </div>
+            <div className="row">
+              <div className="column-3 column label">
+                <label>Foto: </label>
+              </div>
+              <div className="column-9 column input">
+                <input type="file" name="FotoProduto" id="FotoProduto"/>
               </div>
             </div>
             <div className="row">
