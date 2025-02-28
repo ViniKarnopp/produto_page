@@ -7,16 +7,16 @@
       "RelativeMoniker": "D:0:0:{D376F841-42BF-42AC-BE8E-60BE6D46394E}|ProductApi\\ProductApi.csproj|solutionrelative:productapi\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{D376F841-42BF-42AC-BE8E-60BE6D46394E}|ProductApi\\ProductApi.csproj|c:\\users\\vini\\documents\\projects\\p\u00E1ginaproduto\\backend\\productapi\\productapi\\application\\viewmodel\\productviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D376F841-42BF-42AC-BE8E-60BE6D46394E}|ProductApi\\ProductApi.csproj|solutionrelative:productapi\\application\\viewmodel\\productviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{D376F841-42BF-42AC-BE8E-60BE6D46394E}|ProductApi\\ProductApi.csproj|c:\\users\\vini\\documents\\projects\\p\u00E1ginaproduto\\backend\\productapi\\productapi\\model\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D376F841-42BF-42AC-BE8E-60BE6D46394E}|ProductApi\\ProductApi.csproj|solutionrelative:productapi\\model\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D376F841-42BF-42AC-BE8E-60BE6D46394E}|ProductApi\\ProductApi.csproj|c:\\users\\vini\\documents\\projects\\p\u00E1ginaproduto\\backend\\productapi\\productapi\\infrastructure\\repositories\\productrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D376F841-42BF-42AC-BE8E-60BE6D46394E}|ProductApi\\ProductApi.csproj|solutionrelative:productapi\\infrastructure\\repositories\\productrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D376F841-42BF-42AC-BE8E-60BE6D46394E}|ProductApi\\ProductApi.csproj|c:\\users\\vini\\documents\\projects\\p\u00E1ginaproduto\\backend\\productapi\\productapi\\application\\viewmodel\\productviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D376F841-42BF-42AC-BE8E-60BE6D46394E}|ProductApi\\ProductApi.csproj|solutionrelative:productapi\\application\\viewmodel\\productviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D376F841-42BF-42AC-BE8E-60BE6D46394E}|ProductApi\\ProductApi.csproj|c:\\users\\vini\\documents\\projects\\p\u00E1ginaproduto\\backend\\productapi\\productapi\\infrastructure\\connectioncontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -52,14 +52,14 @@
               "RelativeDocumentMoniker": "ProductApi\\Controllers\\ProductController.cs",
               "ToolTip": "C:\\Users\\Vini\\Documents\\Projects\\P\u00E1ginaProduto\\backend\\ProductApi\\ProductApi\\Controllers\\ProductController.cs",
               "RelativeToolTip": "ProductApi\\Controllers\\ProductController.cs",
-              "ViewState": "AgIAAIIAAAAAAAAAAAAwwGUAAAAQAAAAAAAAAA==",
+              "ViewState": "AgIAAIsAAAAAAAAAAAAwwJcAAAA+AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-03T14:04:20.796Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "ProductViewModel.cs",
               "DocumentMoniker": "C:\\Users\\Vini\\Documents\\Projects\\P\u00E1ginaProduto\\backend\\ProductApi\\ProductApi\\Application\\ViewModel\\ProductViewModel.cs",
               "RelativeDocumentMoniker": "ProductApi\\Application\\ViewModel\\ProductViewModel.cs",
@@ -67,11 +67,12 @@
               "RelativeToolTip": "ProductApi\\Application\\ViewModel\\ProductViewModel.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-03T14:25:26.208Z"
+              "WhenOpened": "2025-02-03T14:25:26.208Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Product.cs",
               "DocumentMoniker": "C:\\Users\\Vini\\Documents\\Projects\\P\u00E1ginaProduto\\backend\\ProductApi\\ProductApi\\Model\\Product.cs",
               "RelativeDocumentMoniker": "ProductApi\\Model\\Product.cs",
@@ -83,7 +84,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "ProductRepository.cs",
               "DocumentMoniker": "C:\\Users\\Vini\\Documents\\Projects\\P\u00E1ginaProduto\\backend\\ProductApi\\ProductApi\\Infrastructure\\Repositories\\ProductRepository.cs",
               "RelativeDocumentMoniker": "ProductApi\\Infrastructure\\Repositories\\ProductRepository.cs",

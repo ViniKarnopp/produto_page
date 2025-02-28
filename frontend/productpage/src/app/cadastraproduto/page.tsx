@@ -1,3 +1,5 @@
+import { AddProduct } from "@/EndPoints/AddProduct";
+
 export default async function CadastraProduto() {
 
   async function Salvar(DadosForm : FormData){
@@ -5,15 +7,24 @@ export default async function CadastraProduto() {
     //Atribuindo valores do input a váriaveis
     const Nome = DadosForm.get("NomeProduto") as string;
     console.log(Nome);
+    const PrecoString = DadosForm.get("PrecoProduto") as string;
+    const Preco = Number(PrecoString);
+    const Categoria = DadosForm.get("Categoria") as string;
     const Descricao = DadosForm.get("DescricaoProduto") as string;
     console.log(Descricao);
     const Foto = DadosForm.get("FotoProduto") as File;
     console.log(Foto);
+    const response = AddProduct(Nome, Descricao, Preco, Categoria, Foto);
+    if(!response) {
+      console.log("Falhou a Execução");
+    } else {
+      console.log("Executou");
+    }
   }
 
   return (
     <div>
-      <h1 className="h1">Cadastro de Produtos</h1>
+      <h1 className="h1">Cadastro de Produto</h1>
       <br />
       <br />
       <div className="flex justify-center">
@@ -29,6 +40,7 @@ export default async function CadastraProduto() {
                 name="NomeProduto"
                 id="NomeProduto"
                 placeholder="Nome do Produto"
+                required
               />
             </div>
           </div>
@@ -61,6 +73,7 @@ export default async function CadastraProduto() {
                 min="0"
                 step="0.01"
                 placeholder="R$ Preço do Produto"
+                required
               />
             </div>
             <div className="row">
@@ -72,6 +85,7 @@ export default async function CadastraProduto() {
                   className="border border-zinc-900 rounded-md"
                   name="Categoria"
                   id="Categoria"
+                  required
                 >
                   <option value="Eletrônico">Eletrônico</option>
                   <option value="Roupas">Roupas</option>

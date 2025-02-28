@@ -57,8 +57,8 @@ namespace ProductApi.Controllers
             //Eletrônico, Roupas, Alimentos, Livros ou Outros
             if(productView.Categoria != null) 
             {
-                if(productView.Categoria != "Eletrônico" || productView.Categoria != "Roupas" ||
-                    productView.Categoria != "Alimentos" || productView.Categoria != "Livros" ||
+                if(productView.Categoria != "Eletrônico" && productView.Categoria != "Roupas" &&
+                    productView.Categoria != "Alimentos" && productView.Categoria != "Livros" &&
                     productView.Categoria != "Outros") 
                 {
                     return BadRequest("Categoria Inválida!");
@@ -68,7 +68,7 @@ namespace ProductApi.Controllers
             if (productView.Photo != null)
             {
                 var extensao = productView.Photo.FileName.Split('.')[1];
-                if (extensao != "jpg" || extensao != "jpeg" || extensao != "png") 
+                if (extensao != "jpg" && extensao != "jpeg" && extensao != "png") 
                 {
                     return BadRequest("Photo usando tipo de arquivo inválido!");
                 }
@@ -138,8 +138,8 @@ namespace ProductApi.Controllers
             //Eletrônico, Roupas, Alimentos, Livros ou Outros
             if (productView.Categoria != null)
             {
-                if (productView.Categoria != "Eletrônico" || productView.Categoria != "Roupas" ||
-                    productView.Categoria != "Alimentos" || productView.Categoria != "Livros" ||
+                if (productView.Categoria != "Eletrônico" && productView.Categoria != "Roupas" &&
+                    productView.Categoria != "Alimentos" && productView.Categoria != "Livros" &&
                     productView.Categoria != "Outros")
                 {
                     return BadRequest("Categoria Inválida!");
@@ -149,7 +149,7 @@ namespace ProductApi.Controllers
             if (productView.Photo != null)
             {
                 var extensao = productView.Photo.FileName.Split('.')[1];
-                if (extensao != "jpg" || extensao != "jpeg" || extensao != "png")
+                if (extensao != "jpg" && extensao != "jpeg" && extensao != "png")
                 {
                     return BadRequest("Photo usando tipo de arquivo inválido!");
                 }
