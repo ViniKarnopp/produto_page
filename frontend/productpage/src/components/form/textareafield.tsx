@@ -3,12 +3,12 @@ import { Field } from "@/components/ui/field"
 import { useEffect,useRef } from "react";
 import { useField } from "@unform/core";
 
-interface Props {
+interface Props extends TextareaProps {
     name: string,
     label : string,
 }
 
-export function TextareaField({ name,label, ...rest}: TextareaProps & Props) {
+export function TextareaField({ name,label, ...rest}: Props) {
     const textRef = useRef(null);
     const { fieldName, registerField, defaultValue, error } = useField(name);
 

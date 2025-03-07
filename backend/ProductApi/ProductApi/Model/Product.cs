@@ -20,15 +20,18 @@ namespace ProductApi.Model
         public double Preco { get; private set; }
         [Column("categoria")]
         public string Categoria { get; private set; }
-        [Column("imageurl")]
-        public string? ImageUrl { get; private set; }
+        [Column("imagetype")]
+        public string? ImageType { get; private set; }
+        [Column("imagebase64")]
+        public string? ImageBase64 { get; private set; }
 
-        public Product(string nome, string descricao, double preco, string categoria, string imageurl) {
+        public Product(string nome, string descricao, double preco, string categoria, string imagetype, string imagebase64) {
             this.Nome = nome ?? throw new ArgumentNullException(nameof(nome));
             this.Descricao = descricao;
             this.Preco = preco;
             this.Categoria = categoria;
-            this.ImageUrl = imageurl;
+            this.ImageType = imagetype;
+            this.ImageBase64 = imagebase64;
         }
 
         public void SetProductId(int id) 
@@ -51,9 +54,13 @@ namespace ProductApi.Model
         {
             this.Categoria = categoria;
         }
-        public void SetImageUrl(string imageurl) 
+        public void SetImageType(string imagetype) 
         { 
-            this.ImageUrl = imageurl; 
+            this.ImageType = imagetype; 
+        }
+        public void SetImageBase64(string imagebase64) 
+        {  
+            this.ImageBase64 = imagebase64; 
         }
 
         public Product() 

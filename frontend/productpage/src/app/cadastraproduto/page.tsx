@@ -21,7 +21,7 @@ import {
 import { Form } from "@unform/web";
 import { FormHandles } from "@unform/core";
 import * as Yup from "yup";
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { InputField } from "@/components/form/inputfield";
 import { SelectField} from "@/components/form/selectfield";
 import { ImageUploader} from "@/components/form/imageuploader";
@@ -38,7 +38,11 @@ const schema = Yup.object().shape({
 export default async function CadastraProduto() {
   const formRef = useRef<FormHandles>(null);
   const [fotoProduto, setFotoProduto] = useState();
-
+  
+  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    setFotoProduto(file);
+  }
 
   async function Salvar(dadosForm: FormData) {
     "use client";
@@ -121,7 +125,8 @@ export default async function CadastraProduto() {
                 <SelectField
                   name="categoriaProduto"
                   label="Categoria"
-                  items={[
+                  placeholder="Categoria do Produto"
+                  options={[
                     {label: "Eletrônicos", value: "Eletrônicos"},
                     {label: "Roupas", value: "Roupas"},
                     {label: "Alimentos", value: "Alimentos"},
@@ -136,7 +141,7 @@ export default async function CadastraProduto() {
                   type="file"
                   name="fotoProduto"
                   placeholder="Foto do Produto"
-                  onChange={setFotoProduto}
+                  onChange={handleImageChange}
                 />
               </Field.Root>
             </Fieldset.Content>

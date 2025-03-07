@@ -9,6 +9,7 @@ namespace ProductApi.Application.ViewModel
         public string? Descricao { get; set; }
         public double Preco {  get; set; }
         public string Categoria { get; set; }
-        public IFormFile? Photo { get; set; }
+        public string? PhotoBase64 { get; set; }
+        public string? PhotoType { get; set; }
     }
 }

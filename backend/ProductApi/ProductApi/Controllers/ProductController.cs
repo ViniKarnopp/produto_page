@@ -65,24 +65,21 @@ namespace ProductApi.Controllers
                 }
             }
             //Checando se o arquivo Photo é o do tipo válido e se tem o tamanho até 2MBs
-            if (productView.Photo != null)
+            if (productView.PhotoType != null)
             {
-                var extensao = productView.Photo.FileName.Split('.')[1];
-                if (extensao != "jpg" && extensao != "jpeg" && extensao != "png") 
+                if (productView.PhotoType != "image/jpg" && productView.PhotoType != "image/jpeg" && productView.PhotoType != "image/png") 
                 {
                     return BadRequest("Photo usando tipo de arquivo inválido!");
                 }
-                if(productView.Photo.Length > 2000000) 
+                byte[] imageBytes = Convert.FromBase64String(productView.PhotoBase64);
+                if (imageBytes.Length > 2000000) 
                 {
                     return BadRequest("Photo deve ter no máximo até 2MBs!");
                 }
             }
-            var filePath = Path.Combine("Storage", productView.Photo.FileName);
+            
 
-            using Stream fileStream = new FileStream(filePath, FileMode.Create);
-            productView.Photo.CopyTo(fileStream);
-
-            var product = new Product(productView.Nome, productView.Descricao, productView.Preco, productView.Categoria, filePath);
+            var product = new Product(productView.Nome, productView.Descricao, productView.Preco, productView.Categoria, productView.PhotoType, productView.PhotoBase64);
 
             _productRepository.Add(product);
             return Ok();
@@ -99,18 +96,6 @@ namespace ProductApi.Controllers
             return Ok(response);
         }
 
-        [HttpGet]
-        [Route("{id}/download")]
-        public IActionResult DownloadPhoto(int id)
-        {
-            var product = _productRepository.Get(id);
-
-            var dataBytes = System.IO.File.ReadAllBytes(product.ImageUrl);
-
-            var extensao = "image/" + product.ImageUrl.Split('.')[1];
-
-            return File(dataBytes, extensao);
-        }
 
         [HttpDelete]
         [Route("{id}")]
@@ -146,14 +131,14 @@ namespace ProductApi.Controllers
                 }
             }
             //Checando se o arquivo Photo é o do tipo válido e se tem o tamanho até 2MBs
-            if (productView.Photo != null)
+            if (productView.PhotoType != null)
             {
-                var extensao = productView.Photo.FileName.Split('.')[1];
-                if (extensao != "jpg" && extensao != "jpeg" && extensao != "png")
+                if (productView.PhotoType != "image/jpg" && productView.PhotoType != "image/jpeg" && productView.PhotoType != "image/png")
                 {
                     return BadRequest("Photo usando tipo de arquivo inválido!");
                 }
-                if (productView.Photo.Length > 2000000)
+                byte[] imageBytes = Convert.FromBase64String(productView.PhotoBase64);
+                if (imageBytes.Length > 2000000)
                 {
                     return BadRequest("Photo deve ter no máximo até 2MBs!");
                 }
@@ -164,16 +149,8 @@ namespace ProductApi.Controllers
             product.SetDescricao(productView.Descricao);
             product.SetPreco(productView.Preco);
             product.SetCategoria(productView.Categoria);
-            if (productView.Photo != null)
-            {
-                var filePath = Path.Combine("Storage", productView.Photo.FileName);
-                using Stream fileStream = new FileStream(filePath, FileMode.Create);
-                product.SetImageUrl(filePath);
-            }
-            else 
-            {
-                product.SetImageUrl("");
-            }
+            product.SetImageType(productView.PhotoType);
+            product.SetImageBase64(productView.PhotoBase64);
             var retorno = _productRepository.Update(product);
             if (retorno == true) 
             {

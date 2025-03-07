@@ -15,7 +15,7 @@ namespace ProductApi.Infrastructure.Repositories
         //Adiciona novo produto.
         public void Add(Product product)
         {
-            product.SetProductId(_context.Products.Count() + 1);
+            product.SetProductId(_context.Products.OrderBy(p => p.ProductId).Last().ProductId + 1);
             _context.Products.Add(product);
             _context.SaveChanges();
         }
@@ -26,7 +26,6 @@ namespace ProductApi.Infrastructure.Repositories
             var product = _context.Products.Where(d => d.ProductId == id).First();
             _context.Products.Remove(product);
             _context.SaveChanges();
-            System.IO.File.Delete(path: product.ImageUrl);
 
         }
         //Atualiza produto conforme dados informados.
@@ -39,12 +38,8 @@ namespace ProductApi.Infrastructure.Repositories
                 productAlt.SetDescricao(product.Descricao);
                 productAlt.SetPreco(product.Preco);
                 productAlt.SetCategoria(product.Categoria);
-                if(product.ImageUrl != "") 
-                {
-                    System.IO.File.Delete(path: productAlt.ImageUrl);
-                    productAlt.SetImageUrl(product.ImageUrl);
-
-                }
+                productAlt.SetImageType(product.ImageType);
+                productAlt.SetImageBase64(product.ImageBase64);
                 _context.SaveChanges();
                 return true;
             }

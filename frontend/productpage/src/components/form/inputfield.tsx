@@ -3,12 +3,12 @@ import { Field } from "@/components/ui/field";
 import { useEffect, useRef } from "react";
 import { useField } from "@unform/core";
 
-interface Props {
+interface Props extends InputProps {
   name: string,
   label: string,
 }
 
-export function InputField({ name, label, ...rest }: InputProps & Props) {
+export function InputField({ name, label, ...rest }: Props) {
   const inputRef = useRef(null);
   const { fieldName, registerField, defaultValue, error } = useField(name);
 

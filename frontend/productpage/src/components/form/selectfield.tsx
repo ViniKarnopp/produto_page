@@ -1,19 +1,19 @@
-import { NativeSelectFieldProps,NativeSelectIndicatorProps,NativeSelect,Box } from "@chakra-ui/react";
+import { NativeSelectFieldProps,NativeSelect,Box } from "@chakra-ui/react";
 import { Field } from "@/components/ui/field"
 import { useEffect,useRef } from "react";
 import { useField } from "@unform/core";
 
-interface Props {
+interface Props extends NativeSelectFieldProps {
     name: string,
     label : string,
-    items: [{
+    options: [{
         label: string,
         value: string
     }],
 }
 
 
-export function SelectField({ name,label,items, ...rest}: Props & NativeSelectFieldProps & NativeSelectIndicatorProps) {
+export function SelectField({ name,label,options, ...rest}: Props) {
     const selectRef = useRef(null);
     const { fieldName, registerField, defaultValue, error } = useField(name);
 
@@ -30,7 +30,7 @@ export function SelectField({ name,label,items, ...rest}: Props & NativeSelectFi
         <Field label={label} invalid={!!error} errorText={error}>
             <NativeSelect.Root>
                 <NativeSelect.Field name={name} defaultValue={defaultValue} {...rest}>
-                    {items.map((o: { value: string; label: string; }) => {
+                    {options.map((o) => {
                         return (
                             <option value={o.value}>{o.label}</option>
                         );
