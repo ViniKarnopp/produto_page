@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\Vini\\Documents\\Projects\\P\u00E1ginaProduto\\backend\\ProductApi\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D376F841-42BF-42AC-BE8E-60BE6D46394E}|ProductApi\\ProductApi.csproj|c:\\users\\vini\\documents\\projects\\p\u00E1ginaproduto\\backend\\productapi\\productapi\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D376F841-42BF-42AC-BE8E-60BE6D46394E}|ProductApi\\ProductApi.csproj|solutionrelative:productapi\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{D376F841-42BF-42AC-BE8E-60BE6D46394E}|ProductApi\\ProductApi.csproj|c:\\users\\vini\\documents\\projects\\p\u00E1ginaproduto\\backend\\productapi\\productapi\\application\\viewmodel\\productviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D376F841-42BF-42AC-BE8E-60BE6D46394E}|ProductApi\\ProductApi.csproj|solutionrelative:productapi\\application\\viewmodel\\productviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D376F841-42BF-42AC-BE8E-60BE6D46394E}|ProductApi\\ProductApi.csproj|c:\\users\\vini\\documents\\projects\\p\u00E1ginaproduto\\backend\\productapi\\productapi\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D376F841-42BF-42AC-BE8E-60BE6D46394E}|ProductApi\\ProductApi.csproj|solutionrelative:productapi\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D376F841-42BF-42AC-BE8E-60BE6D46394E}|ProductApi\\ProductApi.csproj|c:\\users\\vini\\documents\\projects\\p\u00E1ginaproduto\\backend\\productapi\\productapi\\model\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -42,30 +42,29 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "ProductController.cs",
               "DocumentMoniker": "C:\\Users\\Vini\\Documents\\Projects\\P\u00E1ginaProduto\\backend\\ProductApi\\ProductApi\\Controllers\\ProductController.cs",
               "RelativeDocumentMoniker": "ProductApi\\Controllers\\ProductController.cs",
               "ToolTip": "C:\\Users\\Vini\\Documents\\Projects\\P\u00E1ginaProduto\\backend\\ProductApi\\ProductApi\\Controllers\\ProductController.cs",
               "RelativeToolTip": "ProductApi\\Controllers\\ProductController.cs",
-              "ViewState": "AgIAAIsAAAAAAAAAAAAwwJcAAAA+AAAAAAAAAA==",
+              "ViewState": "AgIAADsAAAAAAAAAAAAgwJcAAAA+AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-03T14:04:20.796Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-03T14:04:20.796Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "ProductViewModel.cs",
               "DocumentMoniker": "C:\\Users\\Vini\\Documents\\Projects\\P\u00E1ginaProduto\\backend\\ProductApi\\ProductApi\\Application\\ViewModel\\ProductViewModel.cs",
               "RelativeDocumentMoniker": "ProductApi\\Application\\ViewModel\\ProductViewModel.cs",
               "ToolTip": "C:\\Users\\Vini\\Documents\\Projects\\P\u00E1ginaProduto\\backend\\ProductApi\\ProductApi\\Application\\ViewModel\\ProductViewModel.cs",
               "RelativeToolTip": "ProductApi\\Application\\ViewModel\\ProductViewModel.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAABCAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAoAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-03T14:25:26.208Z",
               "EditorCaption": ""

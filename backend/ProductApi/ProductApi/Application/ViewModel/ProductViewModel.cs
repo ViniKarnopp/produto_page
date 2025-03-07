@@ -1,4 +1,6 @@
-﻿namespace ProductApi.Application.ViewModel
+﻿using System.Text.Json.Serialization;
+
+namespace ProductApi.Application.ViewModel
 {
     //ViewModel representando o produto usado no ProductController
     public class ProductViewModel

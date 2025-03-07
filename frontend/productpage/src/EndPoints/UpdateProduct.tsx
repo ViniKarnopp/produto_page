@@ -13,7 +13,12 @@ export async function UpdateProduct(_ProductId: number, _Nome: string, _Descrica
         };
         await api.put("/api/product/" + _ProductId, data)
         .then((e) => Executou = true)
-        .catch((e) => Executou = false);
+        .catch((error) => {
+            if(error.response.status === 404){
+                console.log("Falhou em Atualizar o Produto");
+                console.log(error.response.message);
+            }
+        });
     } else {
         const data = {
             Nome: _Nome,
@@ -23,7 +28,12 @@ export async function UpdateProduct(_ProductId: number, _Nome: string, _Descrica
         };
         await api.put("/api/product/" + _ProductId, data)
         .then((e) => Executou = true)
-        .catch((e) => Executou = false);
+        .catch((error) => {
+            if(error.response.status === 404){
+                console.log("Falhou em Atualizar o Produto");
+                console.log(error.response.message);
+            }
+        });
     }
     return (Executou);
 }
