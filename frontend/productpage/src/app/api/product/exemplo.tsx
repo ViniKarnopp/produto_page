@@ -7,7 +7,7 @@ import {
     Heading,
     Link,
     Select,
-    Spinner,
+    //Spinner,
     Text,
     useToast,
   } from "@chakra-ui/react";
@@ -238,7 +238,7 @@ import {
           </Flex>
           {loading ? (
             <Flex h="100vh" w="100vw">
-              <Spinner />
+             // <Spinner />
             </Flex>
           ) : (
             <Form

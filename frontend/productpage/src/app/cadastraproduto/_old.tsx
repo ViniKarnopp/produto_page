@@ -11,12 +11,12 @@ export default async function CadastraProduto() {
     const categoria = dadosForm.get("categoria") as string;
     const descricao = dadosForm.get("descricaoProduto") as string;
     const foto = dadosForm.get("fotoProduto") as File;
-    const response = AddProduct(nome, descricao, preco, categoria, foto);
+    /*const response = AddProduct(nome, descricao, preco, categoria, foto);
     if(!response) {
       console.log("Falhou a Execução");
     } else {
       console.log("Executou");
-    }
+    }*/
   }
   
   return (

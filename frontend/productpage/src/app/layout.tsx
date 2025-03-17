@@ -1,6 +1,8 @@
 import "./globals.css";
+import "react-toastify/dist/ReactToastify.css";
 import {Header} from '../components/header';
 import { Provider } from "@/components/ui/provider"
+import { ToastContainer } from "react-toastify";
 
 export default function RootLayout({
   children,
@@ -15,6 +17,7 @@ export default function RootLayout({
         <Provider>
         <Header/>
         {children}
+        <ToastContainer />
         </Provider>
       </body>
     </html>

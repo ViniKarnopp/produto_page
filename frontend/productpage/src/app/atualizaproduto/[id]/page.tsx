@@ -18,7 +18,7 @@ export default async function AtualizaProduto({params} : {params : Promise<{id :
         const Categoria = DadosForm.get("Categoria") as string;
         const Descricao = DadosForm.get("DescricaoProduto") as string;
         const Foto = DadosForm.get("FotoProduto") as File;
-        const response = UpdateProduct(ProductId, Nome, Descricao, Preco, Categoria, Foto);
+        //const response = UpdateProduct(ProductId, Nome, Descricao, Preco, Categoria, Foto);
         if(!response) {
           console.log("Falhou a Execução");
         } else {

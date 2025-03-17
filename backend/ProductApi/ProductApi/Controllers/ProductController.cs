@@ -65,7 +65,7 @@ namespace ProductApi.Controllers
                 }
             }
             //Checando se o arquivo Photo é o do tipo válido e se tem o tamanho até 2MBs
-            if (productView.PhotoType != null)
+            /*if (productView.PhotoType != null)
             {
                 if (productView.PhotoType != "image/jpg" && productView.PhotoType != "image/jpeg" && productView.PhotoType != "image/png") 
                 {
@@ -76,7 +76,7 @@ namespace ProductApi.Controllers
                 {
                     return BadRequest("Photo deve ter no máximo até 2MBs!");
                 }
-            }
+            }*/
             
 
             var product = new Product(productView.Nome, productView.Descricao, productView.Preco, productView.Categoria, productView.PhotoType, productView.PhotoBase64);

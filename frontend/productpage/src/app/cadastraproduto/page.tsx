@@ -4,73 +4,125 @@ import {
   Box,
   Button,
   Flex,
-  Heading,
-  Link,
-  Spinner,
-  Text,
-  Toast,
-  Input,
-  Textarea,
-  Fieldset,
+ Fieldset,
   Stack,
-  Field,
-  NativeSelectField,
-  NativeSelectRoot,
+  Field
 } from "@chakra-ui/react";
-
 import { Form } from "@unform/web";
 import { FormHandles } from "@unform/core";
 import * as Yup from "yup";
-import { ChangeEvent, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { InputField } from "@/components/form/inputfield";
-import { SelectField} from "@/components/form/selectfield";
-import { ImageUploader} from "@/components/form/imageuploader";
+import SelectField from "@/components/form/selectfield";
+import ImageUploader from "@/components/form/imageuploader";
 import { TextareaField } from "@/components/form/textareafield";
+import { Flip, toast } from "react-toastify";
 //import { useLocation, useNavigate } from "react-router-dom";
 
 const schema = Yup.object().shape({
   nome: Yup.string().required("Campo Obrigatório"),
   descricao: Yup.string(),
-  preco: Yup.number().positive().required("Campo Obrigatório"),
+  preco: Yup.number().positive("O Valor deve ser positivo").required("Campo Obrigatório"),
   categoria: Yup.string().required("Campo Obrigatório"),
 });
 
-export default async function CadastraProduto() {
+export default function CadastraProduto() {
   const formRef = useRef<FormHandles>(null);
-  const [fotoProduto, setFotoProduto] = useState();
-  
-  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    setFotoProduto(file);
-  }
+  const [fotoProduto, setFotoProduto] = useState<string>();
+  const [fotoType, setFotoType] = useState<string>();
+  const [loading, setLoading] = useState(false);
 
-  async function Salvar(dadosForm: FormData) {
-    "use client";
-    
+  const showToastError = (title: string, description: string) => {
+      toast.error(() => <div>
+          <h2>{title}</h2>
+          <p>{description}</p>
+        </div>, {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+          theme: "light",
+          transition: Flip,
+          });
+    };
+
+    const showToastSuccess = (title: string, description: string) => {
+      toast.success(() => <div>
+          <h2>{title}</h2>
+          <p>{description}</p>
+        </div>, {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+          theme: "light",
+          transition: Flip,
+          });
+    };
+
+  async function Salvar(event: any) {
     //Atribuindo valores do input a váriaveis
-    const nome = dadosForm.get("nomeProduto") as string;
-    const precoString = dadosForm.get("precoProduto") as string;
+    const nome = formRef.current?.getFieldValue("nomeProduto") as string;
+    const precoString = formRef.current?.getFieldValue("precoProduto") as string;
     const preco = Number(precoString);
-    const categoria = dadosForm.get("categoriaProduto") as string;
-    const descricao = dadosForm.get("descricaoProduto") as string;
+    const categoria = formRef.current?.getFieldValue("categoriaProduto") as string;
+    const descricao = formRef.current?.getFieldValue("descricaoProduto") as string;
     const body = {
       nome: nome,
       descricao: descricao,
       preco: preco,
-      categoria: categoria
+      categoria: categoria,
+    };
+    setLoading(true);
+    try {
+      await schema.validate(body, { abortEarly: false });
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        const errorMessages: { [key: string]: string } = {};
+        err.inner.forEach((error) => {
+          if (error.path) {
+            errorMessages[error.path] = error.message;
+            if (error.path == "preco") {
+              showToastError("Preço", error.message);
+            } else if (error.path == "descricao") {
+              showToastError("Descrição", error.message);
+            } else {
+              showToastError(error.path, error.message);
+            }
+          }
+        });
+        formRef.current?.setErrors(errorMessages);
+        setLoading(false);
+        return;
+      }
     }
-    await schema.validate(body, {abortEarly: false});
-
-    const response = AddProduct(nome, descricao, preco, categoria, fotoProduto);
-    if (!response) {
-      console.log("Falhou a Execução");
-    } else {
-      console.log("Executou");
+    
+    try {
+      AddProduct(
+        nome,
+        descricao,
+        preco,
+        categoria,
+        fotoProduto,
+        fotoType
+      );
+    } catch (error) {
+      showToastError("Erro ao Salvar", "Erro ao salvar o produto");
+      setLoading(false);
+    } finally {
+      showToastSuccess("Produto Salvo", "Produto salvo com sucesso");
+      setLoading(false);
     }
+    setLoading(false);
   }
   return (
     <Box height="100%" overflow="hidden">
-      <Heading size="lg">Cadastro de Produto</Heading>
       <Flex
         height="100%"
         pb="10px"
@@ -88,10 +140,19 @@ export default async function CadastraProduto() {
             width: "100%",
             alignItems: "center",
           }}
+          placeholder=""
+          onPointerEnterCapture={() => {}}
+          onPointerLeaveCapture={() => {}}
         >
-          <Fieldset.Root size="lg" maxW="md">
+          <Fieldset.Root
+            borderWidth="1px"
+            borderRadius="md"
+            p="4"
+            size="lg"
+            maxW="md"
+          >
             <Stack>
-              <Fieldset.Legend>Cadastro de Produtos</Fieldset.Legend>
+              <Fieldset.Legend fontWeight="bold">Cadastro de Produtos</Fieldset.Legend>
             </Stack>
 
             <Fieldset.Content>
@@ -100,16 +161,24 @@ export default async function CadastraProduto() {
                   type="text"
                   name="nomeProduto"
                   label="Nome"
-                  placeholder="Nome do Produto" 
+                  placeholder="Nome do Produto"
+                  borderWidth="1px"
+                  borderRadius="md"
+                  p="4"
+                  width="250px"
                 />
               </Field.Root>
               <Field.Root>
                 <TextareaField
-                   size="md"
-                   resize="vertical"
-                   name="descricaoProduto"
-                   label="Descrição"
-                   placeholder="Descrição do Produto" 
+                  size="md"
+                  resize="vertical"
+                  name="descricaoProduto"
+                  label="Descrição"
+                  placeholder="Descrição do Produto"
+                  borderWidth="1px"
+                  borderRadius="md"
+                  p="4"
+                  width="250px"
                 />
               </Field.Root>
               <Field.Root>
@@ -119,205 +188,46 @@ export default async function CadastraProduto() {
                   placeholder="Preço do Produto"
                   step="0.01"
                   label="Preço"
+                  borderWidth="1px"
+                  borderRadius="md"
+                  p="4"
+                  width="250px"
                 />
               </Field.Root>
               <Field.Root>
                 <SelectField
                   name="categoriaProduto"
                   label="Categoria"
-                  placeholder="Categoria do Produto"
                   options={[
-                    {label: "Eletrônicos", value: "Eletrônicos"},
-                    {label: "Roupas", value: "Roupas"},
-                    {label: "Alimentos", value: "Alimentos"},
-                    {label: "Livros", value: "Livros"},
-                    {label: "Outros", value: "Outros"},
+                    { label: "Eletrônico", value: "Eletrônico" },
+                    { label: "Roupas", value: "Roupas" },
+                    { label: "Alimentos", value: "Alimentos" },
+                    { label: "Livros", value: "Livros" },
+                    { label: "Outros", value: "Outros" },
                   ]}
-                 />
+                  borderWidth="1px"
+                  borderRadius="md"
+                  p="4"
+                  width="250px"
+                />
               </Field.Root>
               <Field.Root>
                 <Field.Label>Foto</Field.Label>
-                <Input
-                  type="file"
-                  name="fotoProduto"
-                  placeholder="Foto do Produto"
-                  onChange={handleImageChange}
+                <ImageUploader
+                  value={fotoProduto}
+                  type={fotoType}
+                  setValue={setFotoProduto}
+                  setType={setFotoType}
+                  width="250px"
                 />
               </Field.Root>
             </Fieldset.Content>
-            <Button type="submit" alignSelf="flex-start">Salvar</Button>
+            <Button type="submit" alignSelf="flex-start" className="bg-zinc-900 text-white p-1 mt-2 rounded-md">
+              Salvar
+            </Button>
           </Fieldset.Root>
         </Form>
       </Flex>
     </Box>
   );
 }
-/*
-  return (
-    <div>
-      <h1 className="h1">Cadastro de Produto</h1>
-      <br />
-      <br />
-      <div className="flex justify-center">
-        <form className="flex-col text-left" action={Salvar}>
-          <div className="row">
-            <div className="column-3 column label">
-              <label htmlFor="nomeProduto">Nome: </label>
-            </div>
-            <div className="column-9 column input">
-              <input
-                className="border border-zinc-900 rounded-md"
-                type="text"
-                name="nomeProduto"
-                id="nomeProduto"
-                placeholder="Nome do Produto"
-                required
-              />
-            </div>
-          </div>
-          <br />
-          <br />
-          <div className="row">
-            <div className="column-3 column label">
-              <label htmlFor="descricaoProduto">Descrição:</label>
-            </div>
-            <div className="column-9 column textarea">
-              <textarea
-                className="border border-zinc-900 rounded-md"
-                id="descricaoProduto"
-                name="descricaoProduto"
-                cols={22}
-                rows={4}
-                placeholder="Descrição do Produto"
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="column-3 column label">
-              <label htmlFor="precoProduto">Preço: </label>
-            </div>
-            <div className="column-9 column input">
-              <input
-                className="border border-zinc-900 rounded-md"
-                type="number"
-                name="precoProduto"
-                id="precoProduto"
-                min="0"
-                step="0.01"
-                placeholder="R$ Preço do Produto"
-                required
-              />
-            </div>
-            <div className="row">
-              <div className="column-3 column label">
-                <label htmlFor="=categoria">Categoria: </label>
-              </div>
-              <div className="column-9 column input">
-                <select
-                  className="border border-zinc-900 rounded-md"
-                  name="categoria"
-                  id="categoria"
-                  required
-                >
-                  <option value="Eletrônico">Eletrônico</option>
-                  <option value="Roupas">Roupas</option>
-                  <option value="Alimentos">Alimentos</option>
-                  <option value="Livros">Livros</option>
-                  <option value="Outros">Outros</option>
-                </select>
-              </div>
-            </div>
-            <div className="row">
-              <div className="column-3 column label">
-                <label>Foto: </label>
-              </div>
-              <div className="column-9 column input">
-                <input type="file" name="fotoProduto" id="fotoProduto"/>
-              </div>
-            </div>
-            <div className="row">
-              <button
-                className="bg-zinc-900 text-white p-1 rounded-md"
-                type="submit"
-              >
-                Salvar
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
-  <Box w="100%" mt={10}>
-            <label>Nome: </label>
-            <Input
-              type="text"
-              name="nomeProduto"
-              placeholder="Nome do Produto"
-            />
-          </Box>
-          <Box>
-            <FormControl>
-              <Box w="100%" mt={10}>
-                <FormLabel>Descrição: </FormLabel>
-                <Textarea
-                  size="md"
-                  resize="vertical"
-                  name="descricaoProduto"
-                  placeholder="Descrição do Produto"
-                />
-              </Box>
-            </FormControl>
-          </Box>
-          <Box>
-            <FormControl>
-              <Box w="100%" mt={10}>
-                <FormLabel>Preço: </FormLabel>
-                <Input
-                  type="number"
-                  name="precoProduto"
-                  placeholder="Preço do Produto"
-                />
-              </Box>
-            </FormControl>
-          </Box>
-          <Box>
-            <FormControl>
-              <Box w="100%" mt={10}>
-                <FormLabel>Categoria: </FormLabel>
-                <NativeSelect.Root>
-                  <NativeSelect.Field name="categoriaProduto">
-                    <option value="Eletrônicos">Eletrônicos</option>
-                    <option value="Roupas">Roupas</option>
-                    <option value="Alimentos">Alimentos</option>
-                    <option value="Livros">Livros</option>
-                    <option value="Outros">Outros</option>
-                  </NativeSelect.Field>
-                </NativeSelect.Root>
-              </Box>
-            </FormControl>
-          </Box>
-          <Box>
-            <FormControl>
-              <Box w="100%" mt={10}>
-                <FormLabel>Foto: </FormLabel>
-                <Input
-                  type="file"
-                  name="fotoProduto"
-                  placeholder="Foto do Produto"
-                  onChange={setFotoProduto}
-                />
-              </Box>
-            </FormControl>
-          </Box>
-          <Box>
-            <FormControl>
-              <Box w="100%" mt={10}>
-                <Button type="submit" rounded="md">
-                  Salvar
-                </Button>
-              </Box>
-            </FormControl>
-          </Box>
-*/

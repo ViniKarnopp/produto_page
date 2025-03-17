@@ -1,43 +1,30 @@
-import axios from "axios";
+import api from "@/api";
 
 export async function AddProduct(
   _nome: string,
   _descricao: string,
   _preco: number,
   _categoria: string,
-  _foto: File
+  _foto: string | undefined,
+  _fotoType: string | undefined
 ) {
-  let executou: boolean = false;
-  const axiosConfig = { headers: { "Content-Type": "multipart:form-data" } };
 
-  if (_foto.size > 0) {
-    const data = {
-      nome: _nome,
-      descricao: _descricao,
-      preco: _preco.toFixed(2),
-      categoria: _categoria,
-      photo: _foto,
-    };
-    console.log(data);
-    await axios
-      .post("/api/product/save", data, axiosConfig)
-      .then(() => (executou = true))
-      .catch((error) => {
-        console.log(error);
-      });
-  } else {
-    const data = {
-        nome: _nome,
-        descricao: _descricao,
-        preco: _preco.toFixed(2),
-        categoria: _categoria
-      };
-    await axios
-      .post("/api/product/save", data, axiosConfig)
-      .then(() => (executou = true))
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  return executou;
+  const data = {
+    Nome: _nome,
+    Descricao: _descricao,
+    Preco: _preco.toFixed(2),
+    Categoria: _categoria,
+    PhotoBase64: _foto,
+    PhotoType: _fotoType,
+  };
+  console.log(data);
+  await api
+    .post("/api/product", data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+    .catch((error) => {
+      console.log(error.response);
+      return false;
+    });
+  return true;
 }

@@ -7,7 +7,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const query = req.query;
       let { eventId } = query;
 
-      const response = await api.get("/api/product");
+      const response = await api.get("/api/product", {params: query});
 
       return res.send(response.data);
     } catch (err: any) {

@@ -1,17 +1,18 @@
 import api from "@/api";
 
-export async function UpdateProduct(_ProductId: number, _Nome: string, _Descricao: string, _Preco: number, _Categoria: string, _Foto: File ) {
+export async function UpdateProduct(_productId: number, _nome: string, _descricao: string, _preco: number, _categoria: string, _foto: string, _fotoType: string ) {
     let Executou : boolean = false;
     
-    if (_Foto.size > 0) {
+    if (_foto.length > 0) {
         const data = {
-            Nome: _Nome,
-            Descricao: _Descricao,
-            Preco: _Preco.toFixed(2),
-            Categoria: _Categoria,
-            Photo: _Foto
+            nome: _nome,
+            descricao: _descricao,
+            preco: _preco.toFixed(2),
+            categoria: _categoria,
+            photoBase64: _foto,
+            photoType: _fotoType,
         };
-        await api.put("/api/product/" + _ProductId, data)
+        await api.put("/api/product/" + _productId, data)
         .then((e) => Executou = true)
         .catch((error) => {
             if(error.response.status === 404){
@@ -21,12 +22,12 @@ export async function UpdateProduct(_ProductId: number, _Nome: string, _Descrica
         });
     } else {
         const data = {
-            Nome: _Nome,
-            Descricao: _Descricao,
-            Preco: _Preco.toFixed(2),
-            Categoria: _Categoria
+            nome: _nome,
+            descricao: _descricao,
+            preco: _preco.toFixed(2),
+            categoria: _categoria
         };
-        await api.put("/api/product/" + _ProductId, data)
+        await api.put("/api/product/" + _productId, data)
         .then((e) => Executou = true)
         .catch((error) => {
             if(error.response.status === 404){

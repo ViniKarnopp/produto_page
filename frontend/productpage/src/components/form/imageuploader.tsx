@@ -1,72 +1,85 @@
-import React, { useState, useRef, ChangeEvent } from "react";
+import React, {
+  useState,
+  useRef,
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import {
   Box,
   Image,
   Input,
   Text,
   VStack,
-  /*useToast,*/
   Center,
 } from "@chakra-ui/react";
-import { toaster } from "@/components/ui/toaster";
 import Compressor from "compressorjs";
 import { FaPencilAlt, FaXing } from "react-icons/fa";
-import { CloseIcon } from "@chakra-ui/icons";
+import { IoClose } from "react-icons/io5";
+import { Flip, toast } from "react-toastify";
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
 const ImageUploader = ({
   width,
   value,
+  type,
   setValue,
+  setType,
 }: {
   width?: string;
   value: string | undefined;
-  setValue: (value?: string) => void;
+  type: string | undefined;
+  setValue: Dispatch<SetStateAction<string | undefined>>;
+  setType: Dispatch<SetStateAction<string | undefined>>;
 }) => {
   const [preview, setPreview] = useState<string | undefined>(value);
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  //const toast = useToast();
 
+  const showToastError = (title: string, description: string) => {
+    toast.error(() => <div>
+        <h2>{title}</h2>
+        <p>{description}</p>
+      </div>, {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
+        transition: Flip,
+        });
+  };
   const handleImageClick = () => {
     inputRef.current?.click();
   };
 
   const validateFile = (file: File): boolean => {
     if (!file.type.startsWith("image/")) {
-      toaster.create({
-        title: "Tipo de arquivo inválido",
-        description: "Por favor subir uma imagem",
-        type: "error",
-        duration: 3000,
-        /*isClosable: true,*/
-        action: {
-          label: "Undo",
-          onClick: () => toaster.resume(),
-        },
-      });
+      showToastError("Tipo de arquivo inválido!", "Por favor subir uma imagem no formato jpg ou png");
       return false;
+    } else {
+      if (!file.type.startsWith("image/png")) {
+        if (!file.type.startsWith("image/jpg")) {
+          if (!file.type.startsWith("image/jpeg")) {
+            showToastError("Tipo de arquivo inválido!", "Por favor subir uma imagem no formato jpg ou png");
+            return false;
+          }
+        }
+      }
+      setType(file.type);
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      toaster.create({
-        title: "Imagem muito grande",
-        description: "Imagem precisa ser menor que 5MB",
-        type: "error",
-        duration: 3000,
-        /*isClosable: true,*/
-        action: {
-          label: "Undo",
-          onClick: () => toaster.resume(),
-        },
-      });
+      showToastError("Imagem muito grande", "Imagem precisa ser menor que 2MB");
       return false;
     }
 
     return true;
   };
-
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -88,23 +101,14 @@ const ImageUploader = ({
           if (reader.result) {
             setPreview(reader.result as string);
             setValue(reader.result as string);
+            setType(file.type);
           }
           setIsLoading(false);
         };
       },
       error: (err) => {
         console.error(err);
-        toaster.create({
-          title: "Compression failed",
-          description: "Failed to compress the image",
-          type: "error",
-          duration: 3000,
-          /*isClosable: true,*/
-          action: {
-            label: "Undo",
-            onClick: () => toaster.resume(),
-          },
-        });
+        showToastError("Compression failed", "Failed to compress the image");
         setIsLoading(false);
       },
     });
@@ -162,7 +166,7 @@ const ImageUploader = ({
                 setPreview(undefined);
               }}
             >
-              <CloseIcon />
+              <IoClose />
             </Text>
           )}
         </Box>

@@ -1,7 +1,11 @@
-import api from '../api/index';
+import api from "@/api";
 
 export async function ListProducts() {
-    const response = await api.get("/api/product");
-
-    return(response);
+    try {
+        const response = await api.get("/api/product");
+        return (response.data);
+    }
+    catch (error) {
+        console.log(error);
+    }
 }
