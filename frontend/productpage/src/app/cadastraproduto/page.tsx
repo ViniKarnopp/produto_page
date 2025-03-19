@@ -13,7 +13,7 @@ import { FormHandles } from "@unform/core";
 import * as Yup from "yup";
 import { useRef, useState } from "react";
 import { InputField } from "@/components/form/inputfield";
-import SelectField from "@/components/form/selectfield";
+import SelectField from "@/components/form/selectfieldbkp";
 import ImageUploader from "@/components/form/imageuploader";
 import { TextareaField } from "@/components/form/textareafield";
 import { Flip, toast } from "react-toastify";
@@ -206,7 +206,6 @@ export default function CadastraProduto() {
                     { label: "Outros", value: "Outros" },
                   ]}
                   borderWidth="1px"
-                  borderRadius="md"
                   p="4"
                   width="250px"
                 />

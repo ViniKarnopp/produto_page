@@ -27,8 +27,8 @@ export interface ProductProps {
   Descricao: string;
   Preco: number;
   Categoria: string;
-  PhotoBase64: string;
-  PhotoType: string;
+  ImageBase64: string;
+  ImageType: string;
 }
 
 export default function ListaProdutos() {
@@ -42,7 +42,7 @@ export default function ListaProdutos() {
   useEffect(() => {
     const fetchData = async () => {
       SetLoading(true);
-      const response :ProductProps[] = await ListProducts();
+      const response: ProductProps[] = await ListProducts();
       console.log(response);
       setDados(response);
       console.log(dados);
@@ -51,21 +51,24 @@ export default function ListaProdutos() {
     fetchData();
   }, []);
 
-const showToastWarning = (msg: string) => {
+  const showToastWarning = (msg: string) => {
     toast.warning(msg, {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: false,
-        progress: undefined,
-        theme: "light",
-        transition: Flip,
-        });
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: false,
+      progress: undefined,
+      theme: "light",
+      transition: Flip,
+    });
   };
   const BuscarComFiltro = async (event: any) => {
-    if (precoMinimo == "" && precoMaximo == "") {
+    if (
+      (precoMinimo == "" || precoMinimo == "0") &&
+      (precoMaximo == "" || precoMaximo == "0")
+    ) {
       SetLoading(true);
       const response = await ListProductsFilters(0, 0, categoria);
       setDados(response);
@@ -75,7 +78,9 @@ const showToastWarning = (msg: string) => {
     const precoMax = Number(precoMaximo);
     //Testar se Preço Mínimo e Máximo é maior que zero
     if (precoMin < 0 || precoMax < 0) {
-      showToastWarning("Preço Mínimo e Preço Máximo devem ter valores positivos");
+      showToastWarning(
+        "Preço Mínimo e Preço Máximo devem ter valores positivos"
+      );
       /*toaster.create({
         title: "Preço Mínimo e Preço Máximo devem ter valores positivos",
         type: "warning",
@@ -86,11 +91,17 @@ const showToastWarning = (msg: string) => {
         },
       });*/
       return [];
-    }
-    //Testar se o preço máximo é maior que o preço mínimo
-    if (precoMax <= precoMin) {
-      showToastWarning("Preço Máximo deve ser maior que Preço Mínimo");
-      /*toaster.create({
+    } else {
+      if (precoMax == 0 && precoMin == 0) {
+        SetLoading(true);
+        const response = await ListProductsFilters(0, 0, categoria);
+        setDados(response);
+        SetLoading(false);
+      } else {
+        //Testar se o preço máximo é maior que o preço mínimo
+      if (precoMax <= precoMin) {
+        showToastWarning("Preço Máximo deve ser maior que Preço Mínimo");
+        /*toaster.create({
         title: "Preço Máximo deve ser maior que Preço Mínimo",
         type: "warning",
         duration: 3000,
@@ -99,12 +110,14 @@ const showToastWarning = (msg: string) => {
           onClick: () => toaster.resume(),
         },
       });*/
-      return [];
+        return [];
+      }
+      }
+      SetLoading(true);
+      const response = await ListProductsFilters(precoMin, precoMax, categoria);
+      setDados(response);
+      SetLoading(false);
     }
-    SetLoading(true);
-    const response = await ListProductsFilters(precoMin, precoMax, categoria);
-    setDados(response);
-    SetLoading(false);
   };
   return (
     <Box>
@@ -160,7 +173,7 @@ const showToastWarning = (msg: string) => {
                 }}
               >
                 <option value="">Todas as Categorias</option>
-                <option value="Eletrônicos">Eletrônicos</option>
+                <option value="Eletrônico">Eletrônico</option>
                 <option value="Roupas">Roupas</option>
                 <option value="Alimentos">Alimentos</option>
                 <option value="Livros">Livros</option>

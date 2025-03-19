@@ -1,4 +1,11 @@
-import { Field, Select, NativeSelectFieldProps, Box } from "@chakra-ui/react";
+import {
+  Field,
+  Select,
+  Portal,
+  NativeSelectFieldProps,
+  createListCollection,
+  Box,
+} from "@chakra-ui/react";
 import { useColorModeValue } from "@chakra-ui/color-mode";
 import { useField } from "@unform/core";
 import { useEffect, useRef } from "react";
@@ -68,6 +75,7 @@ const SelectField = ({
   }, [value]);
 
   const bgColor = useColorModeValue("white", "gray.900");
+  const campos = createListCollection({ items: options });
 
   return (
     <Box>
@@ -82,30 +90,51 @@ const SelectField = ({
             {label} {rest._required ? "*" : obrigatorio ? "*" : ""}
           </Field.Label>
         )}
-        <select
+        <Select.Root
+          collection={campos}
+          size="sm"
           id={fieldName}
           name={fieldName}
-          ref={selectRef}
-          value={value}
-          onChange={onChange}
           defaultValue={defaultValue}
-          style={{
-            background: "#F5F5F5",
-            border: "1px solid #E6E6E6",
-            borderRadius: "15px",
-          }}
-          
-          disabled={isLoading ?? isDisabled}
+          disabled={isLoading || isDisabled}
+          width={rest.width}
         >
-          <option value="" disabled selected hidden>
-            {isDisabled ? "Sem dados" : isLoading ? "Buscando dados..." : "Selecione"}
-          </option>
-          {options.map((op) => (
-            <option key={`select-${op.label}`} value={op.value}>
-              {op.label}
-            </option>
-          ))}
-        </select>
+          <Select.HiddenSelect ref={selectRef} onChange={onChange} />
+          <Select.Control
+            style={{
+              background: "#F5F5F5",
+              border: "1px solid #E6E6E6",
+              borderRadius: "15px",
+            }}
+          >
+            <Select.Trigger>
+              <Select.ValueText
+                placeholder={
+                  isDisabled
+                    ? "Sem dados"
+                    : isLoading
+                    ? "Buscando dados..."
+                    : "Selecione"
+                }
+              />
+            </Select.Trigger>
+            <Select.IndicatorGroup>
+              <Select.Indicator />
+            </Select.IndicatorGroup>
+          </Select.Control>
+          <Portal>
+            <Select.Positioner>
+              <Select.Content>
+                {campos.items.map((item) => (
+                  <Select.Item item={item} key={item.value}>
+                    {item.label}
+                    <Select.ItemIndicator />
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select.Positioner>
+          </Portal>
+        </Select.Root>
       </Field.Root>
     </Box>
   );

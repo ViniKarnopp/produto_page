@@ -6,26 +6,26 @@ export async function ListProductsFilters(
   _categoria: string
 ) {
   if (_precoMinimo == 0 && _precoMaximo == 0) {
-    const data = {
+    const body = {
       categoria: _categoria,
     };
     const response = await api
-      .get("/api/product", { params: data })
+      .get("/api/product", { params: body })
       .catch((error) => {
-        throw error;
+        console.log(error);
       });
-    return (response.data);
+    return response ? response.data : null;
   } else {
-    const data = {
+    const body = {
       precoMinimo: _precoMinimo.toFixed(2),
       precoMaximo: _precoMaximo.toFixed(2),
       categoria: _categoria,
     };
     const response = await api
-      .get("/api/product", { params: data })
+      .get("/api/product", { params: body })
       .catch((error) => {
-        throw error.status;
+        console.log(error);
       }); 
-    return (response.data);
+    return response ? response.data : null;
   }
 }

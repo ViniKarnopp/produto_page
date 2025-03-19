@@ -1,15 +1,25 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  webpack(config){
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: '*',
+      },
+    ],
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+  },
+  webpack(config) {
     config.cache = {
-      type:'filesystem',
+      type: 'filesystem',
       compression: 'gzip',
       allowCollectingMemory: true
     };
 
     return config;
-  }
+  },
 };
 
 export default nextConfig;

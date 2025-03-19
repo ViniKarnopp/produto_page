@@ -14,8 +14,8 @@ export async function AddProduct(
     Descricao: _descricao,
     Preco: _preco.toFixed(2),
     Categoria: _categoria,
-    PhotoBase64: _foto,
-    PhotoType: _fotoType,
+    ImageBase64: _foto,
+    ImageType: _fotoType,
   };
   console.log(data);
   await api
