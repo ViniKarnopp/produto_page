@@ -1,8 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using ProductApi.Application.ViewModel;
-using ProductApi.Model;
+using ProductApi.Handlers.Interface;
 
 namespace ProductApi.Controllers
 {
@@ -10,68 +9,41 @@ namespace ProductApi.Controllers
     [Route("api/product")]
     public class ProductController : ControllerBase
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IProductHandler _productHandler;
 
-        public ProductController(IProductRepository productRepository)
+        public ProductController(IProductHandler productHandler)
         {
-            _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
+            _productHandler = productHandler ?? throw new ArgumentNullException(nameof(productHandler));
         }
 
         //Rota da API para buscar produtos com os filtros Preço Mínimo, Preço Máximo e Categoria.
         [HttpGet]
         public IActionResult Get(double precoMinimo, double precoMaximo, string? categoria)
         {
-            //Checando se os filtros estão válidos
-            if (precoMinimo < 0 || precoMaximo < 0) 
+            var response = _productHandler.GetByFiltersAsync(precoMinimo,precoMaximo,categoria);
+            if (response.Result.StartsWith("BadRequest"))
             {
-                return BadRequest("precoMinimo e precoMaximo deve ser maior que 0!");
-            }
-            if (categoria != null) 
+                return BadRequest(response.Result);
+            } else
             {
-                if (categoria != "Eletrônico" && categoria != "Roupas" && categoria != "Alimentos" &&
-                    categoria != "Livros" && categoria != "Outros") 
-                {
-                    return BadRequest("Categoria Inválida!");
-                }
+                return Ok(response.Result);
             }
-
-            var products = _productRepository.Get(precoMinimo, precoMaximo, categoria);
-            var response = System.Text.Json.JsonSerializer.Serialize(products);
-            return Ok(response);
         }
 
         //Rota da API para adicionar novo produto.
         [HttpPost]
         public IActionResult Add(ProductViewModel productView)
         {
-            //Checando se os campos estão conforme o mínimo pedido.
-            //Nome deve ter no mínimo três caracteres
-            if(productView.Nome.Length < 3)
+            var response = _productHandler.AddProductAsync(productView);
+            if (response.Result.StartsWith("BadRequest"))
             {
-                return BadRequest("Nome deve ter no mínimo três caracteres!");
+                return BadRequest(response.Result);
             }
-            //Preco deve ser positivo.
-            if(productView.Preco < 0) 
+            else
             {
-                return BadRequest("Preco deve ter valor positivo!");
+                return Ok();
             }
-            //Categoria de ser obrigatóriamente uma das seguites:
-            //Eletrônico, Roupas, Alimentos, Livros ou Outros
-            if(productView.Categoria != null) 
-            {
-                if(productView.Categoria != "Eletrônico" && productView.Categoria != "Roupas" &&
-                    productView.Categoria != "Alimentos" && productView.Categoria != "Livros" &&
-                    productView.Categoria != "Outros") 
-                {
-                    return BadRequest("Categoria Inválida!");
-                }
-            }
-            
 
-            var product = new Product(productView.Nome, productView.Descricao, productView.Preco, productView.Categoria, productView.PhotoType, productView.PhotoBase64);
-
-            _productRepository.Add(product);
-            return Ok();
         }
 
         //Rota da API que busca os detalhes de um produto de acordo com o ID.
@@ -79,11 +51,8 @@ namespace ProductApi.Controllers
         [Route("{id}")]
         public IActionResult Search(int id)
         {
-
-
-            var products = _productRepository.Get(id);
-            var response = System.Text.Json.JsonSerializer.Serialize(products);
-            return Ok(response);
+            var response = _productHandler.GetProductByIdAsync(id);
+            return Ok(response.Result);
         }
 
         //Rota da API que deleta um produto de acordo com o ID.
@@ -91,8 +60,8 @@ namespace ProductApi.Controllers
         [Route("{id}")]
         public IActionResult Delete(int id) 
         {
-            _productRepository.Del(id);
-            return Ok("Produto Deletado com Sucesso!");
+            var response = _productHandler.DeleteProductAsync(id);
+            return Ok(response.Result);
         }
         
         //Rota da API que atualiza um produto de acordo com ID e os dados informados.
@@ -100,44 +69,14 @@ namespace ProductApi.Controllers
         [Route("{id}")]
         public IActionResult Put(int id, ProductViewModel productView) 
         {
-            //Checando se os campos estão conforme o mínimo pedido.
-            //Nome deve ter no mínimo três caracteres
-            if (productView.Nome.Length < 3)
+            var response = _productHandler.UpdateProductAsync(id, productView);
+            if (response.Result.StartsWith("BadRequest"))
             {
-                return BadRequest("Nome deve ter no mínimo três caracteres!");
+                return BadRequest(response.Result);
             }
-            //Preco deve ser positivo.
-            if (productView.Preco < 0)
+            else
             {
-                return BadRequest("Preco deve ter valor positivo!");
-            }
-            //Categoria de ser obrigatóriamente uma das seguites:
-            //Eletrônico, Roupas, Alimentos, Livros ou Outros
-            if (productView.Categoria != null)
-            {
-                if (productView.Categoria != "Eletrônico" && productView.Categoria != "Roupas" &&
-                    productView.Categoria != "Alimentos" && productView.Categoria != "Livros" &&
-                    productView.Categoria != "Outros")
-                {
-                    return BadRequest("Categoria Inválida!");
-                }
-            }
-            Product product = new Product();
-            product.SetProductId(id);
-            product.SetNome(productView.Nome);
-            product.SetDescricao(productView.Descricao);
-            product.SetPreco(productView.Preco);
-            product.SetCategoria(productView.Categoria);
-            product.SetImageType(productView.PhotoType);
-            product.SetImageBase64(productView.PhotoBase64);
-            var retorno = _productRepository.Update(product);
-            if (retorno == true) 
-            {
-                return Ok("Produto Atualizado com Sucesso!");
-            }
-            else 
-            {
-                return BadRequest("Produto Não Atualizado com Sucesso!");
+                return Ok(response.Result);
             }
         }
     }

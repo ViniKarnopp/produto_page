@@ -1,3 +1,5 @@
+using ProductApi.Handlers;
+using ProductApi.Handlers.Interface;
 using ProductApi.Infrastructure.Repositories;
 using ProductApi.Model;
 
@@ -11,6 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 // Configurando a Injeção de Dependência
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductHandler, ProductHandler>();
 
 //Configuração de CORS
 builder.Services.AddCors(options =>
@@ -23,6 +26,8 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod();
         });
 });
+
+
 
 
 var app = builder.Build();
