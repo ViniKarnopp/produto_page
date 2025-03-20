@@ -17,6 +17,7 @@ namespace ProductApi.Controllers
             _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
         }
 
+        //Rota da API para buscar produtos com os filtros Preço Mínimo, Preço Máximo e Categoria.
         [HttpGet]
         public IActionResult Get(double precoMinimo, double precoMaximo, string? categoria)
         {
@@ -39,8 +40,9 @@ namespace ProductApi.Controllers
             return Ok(response);
         }
 
+        //Rota da API para adicionar novo produto.
         [HttpPost]
-        public IActionResult Add([FromForm] ProductViewModel productView)
+        public IActionResult Add(ProductViewModel productView)
         {
             //Checando se os campos estão conforme o mínimo pedido.
             //Nome deve ter no mínimo três caracteres
@@ -64,19 +66,6 @@ namespace ProductApi.Controllers
                     return BadRequest("Categoria Inválida!");
                 }
             }
-            //Checando se o arquivo Photo é o do tipo válido e se tem o tamanho até 2MBs
-            /*if (productView.PhotoType != null)
-            {
-                if (productView.PhotoType != "image/jpg" && productView.PhotoType != "image/jpeg" && productView.PhotoType != "image/png") 
-                {
-                    return BadRequest("Photo usando tipo de arquivo inválido!");
-                }
-                byte[] imageBytes = Convert.FromBase64String(productView.PhotoBase64);
-                if (imageBytes.Length > 2000000) 
-                {
-                    return BadRequest("Photo deve ter no máximo até 2MBs!");
-                }
-            }*/
             
 
             var product = new Product(productView.Nome, productView.Descricao, productView.Preco, productView.Categoria, productView.PhotoType, productView.PhotoBase64);
@@ -85,6 +74,7 @@ namespace ProductApi.Controllers
             return Ok();
         }
 
+        //Rota da API que busca os detalhes de um produto de acordo com o ID.
         [HttpGet]
         [Route("{id}")]
         public IActionResult Search(int id)
@@ -96,7 +86,7 @@ namespace ProductApi.Controllers
             return Ok(response);
         }
 
-
+        //Rota da API que deleta um produto de acordo com o ID.
         [HttpDelete]
         [Route("{id}")]
         public IActionResult Delete(int id) 
@@ -104,9 +94,11 @@ namespace ProductApi.Controllers
             _productRepository.Del(id);
             return Ok("Produto Deletado com Sucesso!");
         }
+        
+        //Rota da API que atualiza um produto de acordo com ID e os dados informados.
         [HttpPut]
         [Route("{id}")]
-        public IActionResult Put(int id, [FromForm] ProductViewModel productView) 
+        public IActionResult Put(int id, ProductViewModel productView) 
         {
             //Checando se os campos estão conforme o mínimo pedido.
             //Nome deve ter no mínimo três caracteres
@@ -128,19 +120,6 @@ namespace ProductApi.Controllers
                     productView.Categoria != "Outros")
                 {
                     return BadRequest("Categoria Inválida!");
-                }
-            }
-            //Checando se o arquivo Photo é o do tipo válido e se tem o tamanho até 2MBs
-            if (productView.PhotoType != null)
-            {
-                if (productView.PhotoType != "image/jpg" && productView.PhotoType != "image/jpeg" && productView.PhotoType != "image/png")
-                {
-                    return BadRequest("Photo usando tipo de arquivo inválido!");
-                }
-                byte[] imageBytes = Convert.FromBase64String(productView.PhotoBase64);
-                if (imageBytes.Length > 2000000)
-                {
-                    return BadRequest("Photo deve ter no máximo até 2MBs!");
                 }
             }
             Product product = new Product();

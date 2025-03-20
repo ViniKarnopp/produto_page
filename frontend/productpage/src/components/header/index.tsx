@@ -1,5 +1,5 @@
 import Link from "next/link";
-
+//Header da Página de Produtos. Aparece no topo da página de produtos durante toda a navegação.
 export function Header() {
     return (
         <header className="flex px-2 py-4 bg-zinc-900 text-white">

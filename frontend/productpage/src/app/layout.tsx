@@ -4,6 +4,7 @@ import {Header} from '../components/header';
 import { Provider } from "@/components/ui/provider"
 import { ToastContainer } from "react-toastify";
 
+//Layout Base da Página de Produtos
 export default function RootLayout({
   children,
 }: Readonly<{

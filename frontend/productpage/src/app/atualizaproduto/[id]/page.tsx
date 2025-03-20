@@ -1,127 +1,304 @@
-import { DetailProduct } from "@/EndPoints/DetailProduct";
-import { ProductProps } from "@/app/listaprodutos/page";
+"use client";
 import { UpdateProduct } from "@/EndPoints/UpdateProduct";
+import { DetailProduct } from "@/EndPoints/DetailProduct";
+import {
+  Box,
+  Button,
+  Flex,
+ Fieldset,
+  Stack,
+  Field
+} from "@chakra-ui/react";
+import { Form } from "@unform/web";
+import { FormHandles } from "@unform/core";
+import * as Yup from "yup";
+import { useRef, useState,useEffect } from "react";
+import { InputField } from "@/components/form/inputfield";
+import SelectField from "@/components/form/selectfield";
+import ImageUploader from "@/components/form/imageuploader";
+import { TextareaField } from "@/components/form/textareafield";
+import { Flip, toast } from "react-toastify";
+import { useParams } from "next/navigation";
+import { ProductProps } from "@/app/listaprodutos/page";
 
-export default async function AtualizaProduto({params} : {params : Promise<{id : string}>}) {
-    const {id} = await params;
+//Schema para validação dos campos informados pelo usuário.
+//Sendo os campos nome, preço e categoria obrigatórios. E o preço deve ser positivo.
+const schema = Yup.object().shape({
+  nome: Yup.string().required("Campo Obrigatório"),
+  descricao: Yup.string(),
+  preco: Yup.number().positive("O Valor deve ser positivo").required("Campo Obrigatório"),
+  categoria: Yup.string().required("Campo Obrigatório"),
+});
 
-    const response = await DetailProduct(id);
-    const Detalhes : ProductProps = response.data;
+//Página de atualização de um produto. De acordo com o id informado na página de detalhes do produto.
+export default function AtualizaProduto() {
+  //Ref para o formulário. E estados utilizados para manter dados no formulário.
+  const params = useParams();
+  const id = params.id as string;
+  const formRef = useRef<FormHandles>(null);
+  const [categoria, setCategoria] = useState<string[]>();
+  const [fotoProduto, setFotoProduto] = useState<string>();
+  const [fotoType, setFotoType] = useState<string>();
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<ProductProps>();
+  const [preco, setPreco] = useState<number>();
 
-    async function Salvar(DadosForm : FormData){
-        "use server";
-        //Atribuindo valores do input a váriaveis
-        const ProductId = Number(id);
-        const Nome = DadosForm.get("NomeProduto") as string;
-        const PrecoString = DadosForm.get("PrecoProduto") as string;
-        const Preco = Number(PrecoString);
-        const Categoria = DadosForm.get("Categoria") as string;
-        const Descricao = DadosForm.get("DescricaoProduto") as string;
-        const Foto = DadosForm.get("FotoProduto") as File;
-        //const response = UpdateProduct(ProductId, Nome, Descricao, Preco, Categoria, Foto);
-        if(!response) {
-          console.log("Falhou a Execução");
-        } else {
-          console.log("Executou");
+  //Efeito para carregar os dados do produto nos
+  // campos do formulário de acordo com o id informado na página de detalhes do produto.
+  useEffect(() => {
+    if (id) {
+      const fetchData = async () => {
+        setLoading(true);
+        try {
+          const response = await DetailProduct(id);
+          setData(response);
+          setCategoria([response?.Categoria]);
+          setFotoProduto(data?.ImageBase64);
+          setFotoType(data?.ImageType);
+          setPreco(response?.Preco);
+          formRef.current?.setData(formIni);
+        } catch (err) {
+          console.error("Error fetching product:", err);
         }
-      }
+        setLoading(false);
+      };
+      fetchData();
+    }
+  }, [id]);
 
-    return (
+  //Dados iniciais para o formulário.
+  const formIni = {
+    nomeProduto: data?.Nome,
+    precoProduto: data?.Preco,
+    categoriaProduto: [data?.Categoria],
+    descricaoProduto: data?.Descricao,
+  };
+
+  //Toast para exibir mensagem de erro ao cadastrar produto.
+  const showToastError = (title: string, description: string) => {
+    toast.error(
+      () => (
         <div>
-          <h1 className="h1">Atualização de Produto</h1>
-          <br />
-          <br />
-          <div className="flex justify-center">
-            <form className="flex-col text-left" action={Salvar}>
-              <div className="row">
-                <div className="column-3 column label">
-                  <label htmlFor="NomeProduto">Nome: </label>
-                </div>
-                <div className="column-9 column input">
-                  <input
-                    className="border border-zinc-900 rounded-md"
-                    type="text"
-                    name="NomeProduto"
-                    id="NomeProduto"
-                    defaultValue={Detalhes.Nome}
-                    placeholder="Nome do Produto"
-                    required
-                  />
-                </div>
-              </div>
-              <br />
-              <br />
-              <div className="row">
-                <div className="column-3 column label">
-                  <label htmlFor="Descricao">Descrição: </label>
-                </div>
-                <div className="column-9 column textarea">
-                  <textarea
-                    className="border border-zinc-900 rounded-md"
-                    id="Descricao"
-                    name="Descricao"
-                    cols={22}
-                    rows={4}
-                    placeholder="Descrição do Produto"
-                    defaultValue={Detalhes.Descricao}
-                  />
-                </div>
-              </div>
-              <div className="row">
-                <div className="column-3 column label">
-                  <label htmlFor="Preco">Preço: </label>
-                </div>
-                <div className="column-9 column input">
-                  <input
-                    className="border border-zinc-900 rounded-md"
-                    type="number"
-                    name="Preco"
-                    min="0"
-                    step="0.01"
-                    placeholder="R$ Preço do Produto"
-                    required
-                    defaultValue={Detalhes.Preco}
-                  />
-                </div>
-                <div className="row">
-                  <div className="column-3 column label">
-                    <label htmlFor="Categoria">Categoria: </label>
-                  </div>
-                  <div className="column-9 column input">
-                    <select
-                      className="border border-zinc-900 rounded-md"
-                      name="Categoria"
-                      id="Categoria"
-                      required
-                      defaultValue={Detalhes.Categoria}
-                    >
-                      <option value="Eletrônico">Eletrônico</option>
-                      <option value="Roupas">Roupas</option>
-                      <option value="Alimentos">Alimentos</option>
-                      <option value="Livros">Livros</option>
-                      <option value="Outros">Outros</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="column-3 column label">
-                    <label>Foto: </label>
-                  </div>
-                  <div className="column-9 column input">
-                    <input type="file" name="FotoProduto" id="FotoProduto"/>
-                  </div>
-                </div>
-                <div className="row">
-                  <button
-                    className="bg-zinc-900 text-white p-1 rounded-md"
-                    type="submit"
-                  >
-                    Salvar
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
+          <h2>{title}</h2>
+          <p>{description}</p>
         </div>
+      ),
+      {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
+        transition: Flip,
+      }
+    );
+  };
+
+  //Toast para exibir mensagem de sucesso ao cadastrar produto.
+  const showToastSuccess = (title: string, description: string) => {
+    toast.success(
+      () => (
+        <div>
+          <h2>{title}</h2>
+          <p>{description}</p>
+        </div>
+      ),
+      {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
+        transition: Flip,
+      }
+    );
+  };
+
+  //Função para atualizar o produto.
+  async function Salvar(event: any) {
+    //Atribuindo valores do input a váriaveis
+    const nome = formRef.current?.getFieldValue("nomeProduto") as string;
+    const categoria = formRef.current?.getFieldValue(
+      "categoriaProduto"
+    ) as string;
+    const descricao = formRef.current?.getFieldValue(
+      "descricaoProduto"
+    ) as string;
+    const body = {
+      nome: nome,
+      descricao: descricao,
+      preco: preco,
+      categoria: categoria,
+    };
+    setLoading(true);
+    //Validando os campos informados pelo usuário.
+    try {
+      await schema.validate(body, { abortEarly: false });
+    } catch (err) {
+      //Exibindo mensagem de erro caso o usuário não informou os campos obrigatórios.
+      if (err instanceof Yup.ValidationError) {
+        const errorMessages: { [key: string]: string } = {};
+        err.inner.forEach((error) => {
+          if (error.path) {
+            errorMessages[error.path] = error.message;
+            if (error.path == "preco") {
+              showToastError("Preço", error.message);
+            } else if (error.path == "descricao") {
+              showToastError("Descrição", error.message);
+            } else {
+              showToastError(error.path, error.message);
+            }
+          }
+        });
+        formRef.current?.setErrors(errorMessages);
+        setLoading(false);
+        return;
+      }
+    }
+
+    //Função para atualizar o produto.
+    try {
+      UpdateProduct(
+        Number(id),
+        nome,
+        descricao,
+        preco ?? 0,
+        categoria,
+        fotoProduto,
+        fotoType
       );
+    } catch (error) {
+      showToastError("Erro ao Salvar", "Erro ao salvar o produto");
+      setLoading(false);
+    } finally {
+      showToastSuccess("Produto Salvo", "Produto salvo com sucesso");
+      setLoading(false);
+    }
+    setLoading(false);
+  }
+  return (
+    <Box height="100%" overflow="hidden">
+      <Flex
+        height="100%"
+        pb="10px"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        w="100%"
+      >
+        <Form
+          ref={formRef}
+          onSubmit={Salvar}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+            alignItems: "center",
+          }}
+          placeholder=""
+          initialData={formIni}
+          onPointerEnterCapture={() => {}}
+          onPointerLeaveCapture={() => {}}
+        >
+          <Fieldset.Root
+            borderWidth="1px"
+            borderRadius="md"
+            p="4"
+            size="lg"
+            maxW="md"
+          >
+            <Stack>
+              <Fieldset.Legend fontWeight="bold">
+                Atualização de Produtos
+              </Fieldset.Legend>
+            </Stack>
+
+            <Fieldset.Content>
+              <Field.Root>
+                <InputField
+                  type="text"
+                  name="nomeProduto"
+                  label="Nome"
+                  placeholder="Nome do Produto"
+                  borderWidth="1px"
+                  borderRadius="md"
+                  p="4"
+                  width="250px"
+                />
+              </Field.Root>
+              <Field.Root>
+                <TextareaField
+                  size="md"
+                  resize="vertical"
+                  name="descricaoProduto"
+                  label="Descrição"
+                  placeholder="Descrição do Produto"
+                  borderWidth="1px"
+                  borderRadius="md"
+                  p="4"
+                  width="250px"
+                />
+              </Field.Root>
+              <Field.Root>
+                <InputField
+                  type="number"
+                  name="precoProduto"
+                  placeholder="Preço do Produto"
+                  step={0.01}
+                  label="Preço"
+                  value={preco}
+                  onChange={(e) => setPreco(parseFloat(e.target.value))}
+                  borderWidth="1px"
+                  borderRadius="md"
+                  p="4"
+                  width="250px"
+                />
+              </Field.Root>
+              <Field.Root>
+                <SelectField
+                  name="categoriaProduto"
+                  label="Categoria"
+                  options={[
+                    { label: "Eletrônico", value: "Eletrônico" },
+                    { label: "Roupas", value: "Roupas" },
+                    { label: "Alimentos", value: "Alimentos" },
+                    { label: "Livros", value: "Livros" },
+                    { label: "Outros", value: "Outros" },
+                  ]}
+                  value={categoria}
+                  onChange={(e) => setCategoria([e.target.value[0]])}
+                  borderWidth="1px"
+                  p="4"
+                  width="250px"
+                />
+              </Field.Root>
+              <Field.Root>
+                <Field.Label>Foto</Field.Label>
+                <ImageUploader
+                  value={fotoProduto}
+                  type={fotoType}
+                  setValue={setFotoProduto}
+                  setType={setFotoType}
+                  width="250px"
+                />
+              </Field.Root>
+            </Fieldset.Content>
+            <Button
+              type="submit"
+              alignSelf="flex-start"
+              className="bg-zinc-900 text-white p-1 mt-2 rounded-md"
+            >
+              Salvar
+            </Button>
+          </Fieldset.Root>
+        </Form>
+      </Flex>
+    </Box>
+  );
 }

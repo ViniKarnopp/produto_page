@@ -38,8 +38,11 @@ namespace ProductApi.Infrastructure.Repositories
                 productAlt.SetDescricao(product.Descricao);
                 productAlt.SetPreco(product.Preco);
                 productAlt.SetCategoria(product.Categoria);
-                productAlt.SetImageType(product.ImageType);
-                productAlt.SetImageBase64(product.ImageBase64);
+                if(product.ImageBase64 != "")
+                {
+                    productAlt.SetImageType(product.ImageType);
+                    productAlt.SetImageBase64(product.ImageBase64);
+                }
                 _context.SaveChanges();
                 return true;
             }
@@ -51,22 +54,22 @@ namespace ProductApi.Infrastructure.Repositories
         //Lista os produtos conforme os filtros informados preço mínimo e preço máximo e categoria
         public List<Product> Get(double? precoMinimo, double? precoMaximo, string? categoria)
         {
-            if (precoMinimo >= 0 & precoMaximo >= 0)
+            if (precoMinimo > 0 || precoMaximo > 0)
             {
                 if (categoria != null)
                 {
-                    return _context.Products.Where(d => (d.Preco >= precoMinimo || d.Preco <= precoMaximo)).Where(d => d.Categoria.Equals(categoria)).ToList();
+                    return _context.Products.Where(d => ((d.Preco >= precoMinimo && d.Preco <= precoMaximo) && d.Categoria == categoria)).ToList();
                 }
                 else
                 {
-                    return _context.Products.Where(d => (d.Preco >= precoMinimo || d.Preco <= precoMaximo)).ToList();
+                    return _context.Products.Where(d => (d.Preco >= precoMinimo && d.Preco <= precoMaximo)).ToList();
                 }
             }
             else 
             {
-                if (categoria != null) 
+                if (categoria != null || categoria == "") 
                 {
-                    return _context.Products.Where(d => d.Categoria.Equals(categoria)).ToList();
+                    return _context.Products.Where(d => (d.Categoria == categoria)).ToList();
                 }
                 else 
                 {

@@ -20,6 +20,7 @@ import { Flip, toast } from "react-toastify";
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
+//Componente que carrega a imagem e gera uma pré-visualização antes de enviar para o servidor.
 const ImageUploader = ({
   width,
   value,
@@ -38,10 +39,14 @@ const ImageUploader = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const showToastError = (title: string, description: string) => {
-    toast.error(() => <div>
-        <h2>{title}</h2>
-        <p>{description}</p>
-      </div>, {
+    toast.error(
+      () => (
+        <div>
+          <h2>{title}</h2>
+          <p>{description}</p>
+        </div>
+      ),
+      {
         position: "bottom-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -51,21 +56,30 @@ const ImageUploader = ({
         progress: undefined,
         theme: "light",
         transition: Flip,
-        });
+      }
+    );
   };
   const handleImageClick = () => {
     inputRef.current?.click();
   };
 
+  //Função que valida o arquivo antes de comprimi-lo se ele tem o tipo de arquivo correto
+  // e se o tamanho é menor que o limite máximo.
   const validateFile = (file: File): boolean => {
     if (!file.type.startsWith("image/")) {
-      showToastError("Tipo de arquivo inválido!", "Por favor subir uma imagem no formato jpg ou png");
+      showToastError(
+        "Tipo de arquivo inválido!",
+        "Por favor subir uma imagem no formato jpg ou png"
+      );
       return false;
     } else {
       if (!file.type.startsWith("image/png")) {
         if (!file.type.startsWith("image/jpg")) {
           if (!file.type.startsWith("image/jpeg")) {
-            showToastError("Tipo de arquivo inválido!", "Por favor subir uma imagem no formato jpg ou png");
+            showToastError(
+              "Tipo de arquivo inválido!",
+              "Por favor subir uma imagem no formato jpg ou png"
+            );
             return false;
           }
         }
@@ -80,6 +94,8 @@ const ImageUploader = ({
 
     return true;
   };
+
+  //Função que comprime a imagem e gera uma pré-visualização antes de enviar para o servidor.
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;

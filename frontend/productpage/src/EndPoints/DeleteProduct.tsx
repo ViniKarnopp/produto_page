@@ -1,5 +1,6 @@
 import api from "@/api";
 
+//Função para deletar um produto pelo ID.
 export async function DeleteProduct(Id: number) {
     await api.delete("/api/product/" + Id)
     .then((e) => console.log("Deletado com Sucesso"))

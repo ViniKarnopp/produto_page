@@ -25,6 +25,7 @@ namespace ProductApi.Model
         [Column("imagebase64")]
         public string? ImageBase64 { get; private set; }
 
+        //Construtor com paremetros.
         public Product(string nome, string descricao, double preco, string categoria, string imagetype, string imagebase64) {
             this.Nome = nome ?? throw new ArgumentNullException(nameof(nome));
             this.Descricao = descricao;
@@ -34,6 +35,7 @@ namespace ProductApi.Model
             this.ImageBase64 = imagebase64;
         }
 
+        //Métodos para atulizar os dados do produto na classe.
         public void SetProductId(int id) 
         {
             this.ProductId = id;
@@ -63,6 +65,7 @@ namespace ProductApi.Model
             this.ImageBase64 = imagebase64; 
         }
 
+        //Construtor sem paremetros
         public Product() 
         {
         }

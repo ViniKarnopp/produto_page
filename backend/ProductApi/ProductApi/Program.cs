@@ -12,6 +12,7 @@ builder.Services.AddSwaggerGen();
 // Configurando a Injeção de Dependência
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
 
+//Configuração de CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "MyPolicy",

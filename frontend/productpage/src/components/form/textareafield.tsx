@@ -8,6 +8,7 @@ interface Props extends TextareaProps {
     label : string,
 }
 
+//Campo Textarea com Chackra UI e Unform.
 export function TextareaField({ name,label, ...rest}: Props) {
     const textRef = useRef(null);
     const { fieldName, registerField, defaultValue, error } = useField(name);

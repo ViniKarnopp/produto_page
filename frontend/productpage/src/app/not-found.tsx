@@ -1,5 +1,5 @@
 import Link from "next/link";
-
+//Página de Not-Found, caso o usuário tente acessar uma página que não existe
 export default function NotFound() {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen">

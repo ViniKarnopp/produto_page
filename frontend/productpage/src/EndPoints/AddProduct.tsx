@@ -1,5 +1,6 @@
 import api from "@/api";
 
+//Função que adiciona um produto na API Backend.
 export async function AddProduct(
   _nome: string,
   _descricao: string,
@@ -14,14 +15,12 @@ export async function AddProduct(
     Descricao: _descricao,
     Preco: _preco.toFixed(2),
     Categoria: _categoria,
-    ImageBase64: _foto,
-    ImageType: _fotoType,
+    PhotoBase64: _foto,
+    PhotoType: _fotoType,
   };
   console.log(data);
   await api
-    .post("/api/product", data, {
-      headers: { "Content-Type": "multipart/form-data" },
-    })
+    .post("/api/product", data)
     .catch((error) => {
       console.log(error.response);
       return false;

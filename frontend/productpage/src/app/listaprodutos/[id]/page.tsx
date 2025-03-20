@@ -5,15 +5,18 @@ import { DetailProduct } from "@/EndPoints/DetailProduct";
 import { DeleteProduct } from "@/EndPoints/DeleteProduct";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import NextImage from "next/image";
 
+//Página que detalha o produto de acordo com o ID vindo da página lista produto.
 export default function DetalheProduto() {
+  //Paremetro ID passado para página.
+  //Estados para manter os dados vindos da API e Imagem do Produto.
   const params = useParams();
   const id = params.id as string;
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<ProductProps>();
   const [imageString, setImageString] = useState<string>();
 
+  //Efeito que carrega os detalhes do produto de acordo com o ID.
   useEffect(() => {
     if (id) {
       const fetchData = async () => {
@@ -21,13 +24,9 @@ export default function DetalheProduto() {
         try {
           const response = await DetailProduct(id);
           setData(response);
-          console.log(response);
-          console.log(data);
-          // Create image string from response data, not from stale state
           if (response?.ImageType && response?.ImageBase64) {
-            const imgString = `data:${response.ImageType};base64,${response.ImageBase64}`;
+            const imgString = `${response.ImageBase64}`;
             setImageString(imgString);
-            console.log(imageString);
           }
         } catch (err) {
           console.error("Error fetching product:", err);
@@ -38,6 +37,7 @@ export default function DetalheProduto() {
     }
   }, [id]);
 
+  //Função que deleta o produto de acordo com o ID.
   async function Deletar() {
     const idNum = Number(id);
     const response = await DeleteProduct(idNum);
@@ -45,6 +45,7 @@ export default function DetalheProduto() {
       console.log("Falhou");
     }
   }
+
 
   if (loading) {
     return <div>Loading...</div>;
@@ -63,11 +64,13 @@ export default function DetalheProduto() {
           className="p-5"
         >
           {imageString ? (
-            <div style={{ position: 'relative', width: '400px', height: '400px' }}>
+            <div
+              style={{ position: "relative", width: "400px", height: "400px" }}
+            >
               <Image
                 alt="Imagem do Produto"
                 src={imageString}
-                style={{ objectFit: 'contain' }}
+                style={{ objectFit: "contain" }}
               />
             </div>
           ) : (
@@ -76,7 +79,7 @@ export default function DetalheProduto() {
           <Text textStyle="md">Produto: {data?.Nome}</Text>
           <Text textStyle="md">Descrição: {data?.Descricao}</Text>
           <Text textStyle="md">Preço: {data?.Preco}</Text>
-          <Text textStyle="md">Categoria: {data?.Descricao}</Text>
+          <Text textStyle="md">Categoria: {data?.Categoria}</Text>
           <Box boxOrient="horizontal">
             <Button
               background="black"
@@ -103,20 +106,3 @@ export default function DetalheProduto() {
     </Box>
   );
 }
-
-/*{imageString ? (
-            <Box
-              style={{ position: "relative", width: "400px", height: "400px" }}
-            >
-              <Image asChild style={{ objectFit: "contain" }}>
-                <NextImage
-                  alt="Imagem do Produto"
-                  src={imageString}
-                  width={400}
-                  height={400}
-                />
-              </Image>
-            </Box>
-          ) : (
-            <Box>No image available</Box>
-          )}*/

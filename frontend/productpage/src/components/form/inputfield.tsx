@@ -8,6 +8,7 @@ interface Props extends InputProps {
   label: string,
 }
 
+//Campo de Input para formulários usando o Unform e Chakra UI
 export function InputField({ name, label, ...rest }: Props) {
   const inputRef = useRef(null);
   const { fieldName, registerField, defaultValue, error } = useField(name);

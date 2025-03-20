@@ -6,21 +6,17 @@ import {
   Heading,
   Link,
   Text,
-  Toast,
   Input,
-  Textarea,
-  Fieldset,
-  Stack,
   Field,
   NativeSelect,
-  HStack,
-  List,
 } from "@chakra-ui/react";
 import { ListProducts } from "@/EndPoints/ListProducts";
 import { ListProductsFilters } from "@/EndPoints/ListProductsFilters";
 import { useEffect, useState } from "react";
 import { Flip, toast } from "react-toastify";
 
+//Página que lista os produtos de acordo com os filtros Preço Mínimo, Preço Máximo e Categorias
+//Interface de Produto para manter o formato que vem da API backend.
 export interface ProductProps {
   ProductId: number;
   Nome: string;
@@ -32,25 +28,26 @@ export interface ProductProps {
 }
 
 export default function ListaProdutos() {
+  //Estados utilizados para manter os dados vindo da API e os filtros.
   const [loading, SetLoading] = useState(false);
-  const [filtros, SetFiltros] = useState(false);
   const [dados, setDados] = useState<ProductProps[]>();
   const [precoMinimo, setPrecoMinimo] = useState("");
   const [precoMaximo, setPrecoMaximo] = useState("");
   const [categoria, setCategoria] = useState("");
 
+  //Função que carrega os dados da API quando a página é carregada.
+  //Lista todos os produtos sem filtros.
   useEffect(() => {
     const fetchData = async () => {
       SetLoading(true);
       const response: ProductProps[] = await ListProducts();
-      console.log(response);
       setDados(response);
-      console.log(dados);
       SetLoading(false);
     };
     fetchData();
   }, []);
 
+  //Toast para mostrar mensagens de erro.
   const showToastWarning = (msg: string) => {
     toast.warning(msg, {
       position: "bottom-right",
@@ -64,6 +61,8 @@ export default function ListaProdutos() {
       transition: Flip,
     });
   };
+
+  //Método que busca os produtos com base nos filtros.
   const BuscarComFiltro = async (event: any) => {
     if (
       (precoMinimo == "" || precoMinimo == "0") &&
@@ -73,50 +72,41 @@ export default function ListaProdutos() {
       const response = await ListProductsFilters(0, 0, categoria);
       setDados(response);
       SetLoading(false);
-    }
-    const precoMin = Number(precoMinimo);
-    const precoMax = Number(precoMaximo);
-    //Testar se Preço Mínimo e Máximo é maior que zero
-    if (precoMin < 0 || precoMax < 0) {
-      showToastWarning(
-        "Preço Mínimo e Preço Máximo devem ter valores positivos"
-      );
-      /*toaster.create({
-        title: "Preço Mínimo e Preço Máximo devem ter valores positivos",
-        type: "warning",
-        duration: 3000,
-        action: {
-          label: "Undo",
-          onClick: () => toaster.resume(),
-        },
-      });*/
-      return [];
     } else {
-      if (precoMax == 0 && precoMin == 0) {
+      const precoMin = Number(precoMinimo);
+      const precoMax = Number(precoMaximo);
+      //Testar se Preço Mínimo e Máximo é positivos.
+      if (precoMin < 0 || precoMax < 0) {
+        showToastWarning(
+          "Preço Mínimo e Preço Máximo devem ter valores positivos"
+        );
+        return [];
+      } else {
+        //Testar se Preço Mínimo e Máximo foram informados.
+        // Zero é considerado quando o usuário não informou valor.
+        if (precoMax == 0 && precoMin == 0) {
+          SetLoading(true);
+          const response = await ListProductsFilters(0, 0, categoria);
+          setDados(response);
+          SetLoading(false);
+        } else {
+          console.log("Entrou no else de preços iguais a 0");
+          //Testar se o preço máximo é maior que o preço mínimo
+          if (precoMax <= precoMin) {
+            showToastWarning("Preço Máximo deve ser maior que Preço Mínimo");
+            return [];
+          }
+        }
+        //Função que busca os produtos com base nos filtros na API backend.
         SetLoading(true);
-        const response = await ListProductsFilters(0, 0, categoria);
+        const response = await ListProductsFilters(
+          precoMin,
+          precoMax,
+          categoria
+        );
         setDados(response);
         SetLoading(false);
-      } else {
-        //Testar se o preço máximo é maior que o preço mínimo
-      if (precoMax <= precoMin) {
-        showToastWarning("Preço Máximo deve ser maior que Preço Mínimo");
-        /*toaster.create({
-        title: "Preço Máximo deve ser maior que Preço Mínimo",
-        type: "warning",
-        duration: 3000,
-        action: {
-          label: "Undo",
-          onClick: () => toaster.resume(),
-        },
-      });*/
-        return [];
       }
-      }
-      SetLoading(true);
-      const response = await ListProductsFilters(precoMin, precoMax, categoria);
-      setDados(response);
-      SetLoading(false);
     }
   };
   return (
@@ -130,66 +120,64 @@ export default function ListaProdutos() {
         Produtos
       </Heading>
       <Flex>
-        <Stack direction="row">
-          <Field.Root>
-            <Field.Label>Preço Mínimo</Field.Label>
-            <Input
-              type="number"
-              name="precoMinimo"
-              step="0.01"
-              min="0"
-              width="sm"
-              borderColor="black"
-              borderRadius="sm"
-              placeholder="Preço Mínimo"
+        <Field.Root>
+          <Field.Label>Preço Mínimo</Field.Label>
+          <Input
+            type="number"
+            name="precoMinimo"
+            step="0.01"
+            min="0"
+            size="sm"
+            borderColor="black"
+            borderRadius="sm"
+            placeholder="Preço Mínimo"
+            onChange={(event) => {
+              setPrecoMinimo(event.target.value);
+            }}
+          />
+        </Field.Root>
+        <Field.Root>
+          <Field.Label>Preço Máximo</Field.Label>
+          <Input
+            type="number"
+            name="precoMaximo"
+            step="0.01"
+            size="sm"
+            min="0"
+            placeholder="Preço Máximo"
+            onChange={(event) => {
+              setPrecoMaximo(event.target.value);
+            }}
+          />
+        </Field.Root>
+        <Field.Root>
+          <Field.Label>Categoria</Field.Label>
+          <NativeSelect.Root size="sm">
+            <NativeSelect.Field
+              placeholder="Selecione uma Categoria"
+              name="categoriaProduto"
+              maxInlineSize="sm"
               onChange={(event) => {
-                setPrecoMinimo(event.target.value);
+                setCategoria(event.target.value);
               }}
-            />
-          </Field.Root>
-          <Field.Root>
-            <Field.Label>Preço Máximo</Field.Label>
-            <Input
-              type="number"
-              name="precoMaximo"
-              step="0.01"
-              width="sm"
-              min="0"
-              placeholder="Preço Máximo"
-              onChange={(event) => {
-                setPrecoMaximo(event.target.value);
-              }}
-            />
-          </Field.Root>
-          <Field.Root>
-            <Field.Label>Categoria</Field.Label>
-            <NativeSelect.Root size="sm">
-              <NativeSelect.Field
-                placeholder="Selecione uma Categoria"
-                name="categoriaProduto"
-                maxInlineSize="sm"
-                onChange={(event) => {
-                  setCategoria(event.target.value);
-                }}
-              >
-                <option value="">Todas as Categorias</option>
-                <option value="Eletrônico">Eletrônico</option>
-                <option value="Roupas">Roupas</option>
-                <option value="Alimentos">Alimentos</option>
-                <option value="Livros">Livros</option>
-                <option value="Outros">Outros</option>
-              </NativeSelect.Field>
-              <NativeSelect.Indicator />
-            </NativeSelect.Root>
-          </Field.Root>
-          <Button
-            className="bg-zinc-900 text-white p-1 rounded-md"
-            alignSelf="flex-end"
-            onClick={BuscarComFiltro}
-          >
-            Buscar
-          </Button>
-        </Stack>
+            >
+              <option value="">Todas as Categorias</option>
+              <option value="Eletrônico">Eletrônico</option>
+              <option value="Roupas">Roupas</option>
+              <option value="Alimentos">Alimentos</option>
+              <option value="Livros">Livros</option>
+              <option value="Outros">Outros</option>
+            </NativeSelect.Field>
+            <NativeSelect.Indicator />
+          </NativeSelect.Root>
+        </Field.Root>
+        <Button
+          className="bg-zinc-900 text-white p-1 rounded-md"
+          alignSelf="flex-end"
+          onClick={BuscarComFiltro}
+        >
+          Buscar
+        </Button>
       </Flex>
       <Flex className="mt-5">
         <Flex className="flex flex-col gap-4 mx-2">
@@ -199,7 +187,10 @@ export default function ListaProdutos() {
               <Text>Descrição: {p.Descricao}</Text>
               <Text>Preço: R$ {p.Preco}</Text>
               <Text>Categoria: {p.Categoria}</Text>
-              <Link href={"/listaprodutos/" + p.ProductId}>
+              <Link
+                textDecoration={"underline"}
+                href={"/listaprodutos/" + p.ProductId}
+              >
                 Detalhes do Produto
               </Link>
             </Box>
@@ -209,58 +200,3 @@ export default function ListaProdutos() {
     </Box>
   );
 }
-/*
-return (
-    <div>
-        <h1 className="text-center mt-5 mb-2 font-bold text-3xl">
-            Produtos
-        </h1>
-        <h3 className="mx-2">Buscar Produtos</h3>
-        <form className="flex gap-2 my-4 mx-2">
-          <span>Preço Mínimo: </span>
-          <input
-          className="border border-gray-200"
-          type="number"
-          name="PrecoMinimo"
-          min="0"
-          step="0.01"
-          />
-          <span> Preço Máximo: </span>
-          <input
-          className="border border-gray-200"
-          type="number"
-          name="PrecoMaximo"
-          min="0"
-          step="0.01"
-          />
-          <span className="align-center"> Categoria: </span>
-          <select
-          className="border border-gray-200"
-          name="Categoria"
-          >
-            <option value="">Todas</option>
-            <option value="Eletrônico">Eletrônico</option>
-            <option value="Roupas">Roupas</option>
-            <option value="Alimentos">Alimentos</option>
-            <option value="Livros">Livros</option>
-            <option value="Outros">Outros</option>
-          </select>
-          <button
-          className="bg-zinc-900 text-white p-1 rounded-md"
-          >Buscar</button>
-        </form>
-        <div className="flex flex-col gap-4 mx-2">
-            {data.map(p => (
-                <div key={p.productId} className="bg-gray-200 p-4 rounded-md">
-                    <h2>Nome: {p.nome}</h2>
-                    <p>Descrição: {p.descricao}</p>
-                    <p>Preço: R$ {parseFloat(p.preco.toString()).toFixed(2)}</p>
-                    <p>Categoria: {p.categoria}</p>
-                    <Link href={'/listaprodutos/' + p.productId}>Detalhes do Produto</Link>
-                </div>
-            ))}
-        </div>
-        
-    </div>
-  );
-  */
