@@ -4,6 +4,7 @@ import React, {
   ChangeEvent,
   Dispatch,
   SetStateAction,
+  useEffect,
 } from "react";
 import {
   Box,
@@ -37,6 +38,10 @@ const ImageUploader = ({
   const [preview, setPreview] = useState<string | undefined>(value);
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+      setPreview(value);
+    }, [value]);
 
   const showToastError = (title: string, description: string) => {
     toast.error(

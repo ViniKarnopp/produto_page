@@ -31,8 +31,8 @@ const schema = Yup.object().shape({
 export default function CadastraProduto() {
   //Ref para o formulário. E estados utilizados para manter dados no formulário.
   const formRef = useRef<FormHandles>(null);
-  const [fotoProduto, setFotoProduto] = useState<string>();
-  const [fotoType, setFotoType] = useState<string>();
+  const [fotoProduto, setFotoProduto] = useState<string | undefined>("");
+  const [fotoType, setFotoType] = useState<string | undefined>("");
   const [loading, setLoading] = useState(false);
   const [preco, setPreco] = useState<number>(0);
 
@@ -156,8 +156,8 @@ export default function CadastraProduto() {
             alignItems: "center",
           }}
           placeholder=""
-          onPointerEnterCapture={() => {}}
-          onPointerLeaveCapture={() => {}}
+          //onPointerEnterCapture={() => {}}
+          //onPointerLeaveCapture={() => {}}
         >
           <Fieldset.Root
             borderWidth="1px"

@@ -36,12 +36,12 @@ export default function AtualizaProduto() {
   const params = useParams();
   const id = params.id as string;
   const formRef = useRef<FormHandles>(null);
-  const [categoria, setCategoria] = useState<string[]>();
-  const [fotoProduto, setFotoProduto] = useState<string>();
-  const [fotoType, setFotoType] = useState<string>();
+  const [categoria, setCategoria] = useState<string[]>([]);
+  const [fotoProduto, setFotoProduto] = useState<string | undefined>("");
+  const [fotoType, setFotoType] = useState<string | undefined>("");
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<ProductProps>();
-  const [preco, setPreco] = useState<number>();
+  const [preco, setPreco] = useState<number>(0);
 
   //Efeito para carregar os dados do produto nos
   // campos do formulário de acordo com o id informado na página de detalhes do produto.
@@ -53,8 +53,8 @@ export default function AtualizaProduto() {
           const response = await DetailProduct(id);
           setData(response);
           setCategoria([response?.Categoria]);
-          setFotoProduto(data?.ImageBase64);
-          setFotoType(data?.ImageType);
+          setFotoProduto(response.ImageBase64);
+          setFotoType(response.ImageType);
           setPreco(response?.Preco);
           formRef.current?.setData(formIni);
         } catch (err) {
@@ -180,6 +180,7 @@ export default function AtualizaProduto() {
       showToastSuccess("Produto Salvo", "Produto salvo com sucesso");
       setLoading(false);
     }
+    window.location.href = `/listaprodutos/${id}`;
     setLoading(false);
   }
   return (
@@ -203,8 +204,8 @@ export default function AtualizaProduto() {
           }}
           placeholder=""
           initialData={formIni}
-          onPointerEnterCapture={() => {}}
-          onPointerLeaveCapture={() => {}}
+          //onPointerEnterCapture={() => {}}
+          //onPointerLeaveCapture={() => {}}
         >
           <Fieldset.Root
             borderWidth="1px"

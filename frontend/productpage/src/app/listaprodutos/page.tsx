@@ -110,7 +110,7 @@ export default function ListaProdutos() {
     }
   };
   return (
-    <Box>
+    <Box padding={7}>
       <Heading
         size="3xl"
         alignItems="center"
